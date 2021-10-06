@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app103/models/checkout_item_model.dart';
-import 'package:flutter_app103/models/wishlist.dart';
+import 'package:flutter_app103/models/order/checkout_item_model.dart';
+import 'package:flutter_app103/models/product/wishlist.dart';
 
 class CheckoutItemWidget extends StatefulWidget {
   final CheckoutItem checkout;

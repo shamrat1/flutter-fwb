@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app103/models/demo_image_list.dart';
+import 'package:flutter_app103/models/common/demo_image_list.dart';
 
 class HomePageWidget extends StatelessWidget {
   final String title;
@@ -16,8 +16,9 @@ class HomePageWidget extends StatelessWidget {
           child: Text(title,
               style: TextStyle(
                   fontSize: 20,
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold)),
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic)),
         ),
         SizedBox(
           height: 200,

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app103/models/delivey_details.dart';
-import 'package:flutter_app103/models/order_calculation.dart';
+import 'package:flutter_app103/models/order/delivey_details.dart';
+import 'package:flutter_app103/models/order/order_calculation.dart';
 import 'package:flutter_app103/widgets/delivery_details_widget.dart';
 
 class DeliveryDetails extends StatefulWidget {

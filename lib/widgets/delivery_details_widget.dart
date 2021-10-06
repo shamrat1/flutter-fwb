@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app103/models/Seller_transactions.dart';
-import 'package:flutter_app103/models/delivey_details.dart';
+import 'package:flutter_app103/models/order/Seller_transactions.dart';
+import 'package:flutter_app103/models/order/delivey_details.dart';
 
 class DeliveryDetailsWidget extends StatelessWidget {
   final DeliveryDetailsModel deliveryDetailsModel;

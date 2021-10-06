@@ -1,7 +1,7 @@
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app103/models/checkout.dart';
+import 'package:flutter_app103/models/order/checkout.dart';
 import 'package:flutter_app103/widgets/checkout_widget.dart';
 
 class CheckoutScreen extends StatefulWidget {

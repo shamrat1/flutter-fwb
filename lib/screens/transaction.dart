@@ -1,8 +1,8 @@
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app103/models/Seller_transactions.dart';
-import 'package:flutter_app103/models/transaction_details.dart';
+import 'package:flutter_app103/models/order/Seller_transactions.dart';
+import 'package:flutter_app103/models/order/transaction_details.dart';
 import 'package:flutter_app103/widgets/transaction_widget.dart';
 
 class TransactionPage extends StatefulWidget {

@@ -86,7 +86,15 @@ class _PersonalInformationState extends State<PersonalInformation> {
                   ],
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                      primary: selected ? Colors.blue : Colors.grey),
+                  onPressed: () {
+                    if (selected) {
+                      print("proceed");
+                    } else {
+                      print("you have to agree with t&c");
+                    }
+                  },
                   child: Text("Next"),
                 ),
               ],

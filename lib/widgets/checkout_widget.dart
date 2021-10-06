@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app103/models/checkout.dart';
+import 'package:flutter_app103/models/order/checkout.dart';
 
 class CheckoutWidget extends StatefulWidget {
   final CheckoutOne checkoutOne;

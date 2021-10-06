@@ -1,7 +1,7 @@
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app103/models/demo_image_list.dart';
+import 'package:flutter_app103/models/common/demo_image_list.dart';
 import 'package:flutter_app103/widgets/home_page_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,12 +16,63 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+          child: ListView(
+        children: [
+          DrawerHeader(
+            child: Text('sidebar'),
+          ),
+          ListTile(
+              onTap: () {}, leading: Icon(Icons.home), title: Text('Home')),
+          ListTile(
+              onTap: () {},
+              leading: Icon(Icons.shopping_cart),
+              title: Text('Cart')),
+          ListTile(
+              onTap: () {},
+              leading: Icon(Icons.contact_page),
+              title: Text('Contact Us')),
+          ListTile(
+              onTap: () {},
+              leading: Icon(Icons.person),
+              title: Text('About Us')),
+          ListTile(
+              onTap: () {}, leading: Icon(Icons.star), title: Text('Rate Us')),
+          ListTile(
+              onTap: () {},
+              leading: Icon(Icons.reviews),
+              title: Text('Review')),
+          ListTile(
+              onTap: () {},
+              leading: Icon(Icons.track_changes),
+              title: Text('TrackDelivery')),
+          ListTile(
+              onTap: () {},
+              leading: Icon(Icons.message),
+              title: Text('Messages')),
+          ListTile(
+              onTap: () {},
+              leading: Icon(Icons.notification_important),
+              title: Text('Notifications')),
+          ListTile(
+              onTap: () {},
+              leading: Icon(Icons.chat_bubble_outline),
+              title: Text('Privacy Policy')),
+        ],
+      )),
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: Icon(
-          CupertinoIcons.arrow_left,
-          color: Colors.black,
-        ),
+        leading: Builder(builder: (context) {
+          return IconButton(
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+            icon: Icon(
+              Icons.menu,
+              color: Colors.black,
+            ),
+          );
+        }),
         title: Text(
           "FEMALEPRENEURE BAZAAR",
           style: TextStyle(color: Colors.black38),

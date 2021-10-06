@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app103/models/wishlist.dart';
+import 'package:flutter_app103/models/product/wishlist.dart';
 
 class WishlistWidget extends StatefulWidget {
   final Wishlist wishlist;

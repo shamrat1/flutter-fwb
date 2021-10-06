@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app103/models/product_search.dart';
+import 'package:flutter_app103/models/product/product_search.dart';
 import 'package:flutter_app103/widgets/product_search_widget.dart';
 
 class SearchPage extends StatefulWidget {

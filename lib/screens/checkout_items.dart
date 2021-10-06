@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app103/models/checkout_item_model.dart';
+import 'package:flutter_app103/models/order/checkout_item_model.dart';
 import 'package:flutter_app103/widgets/checkout_items_widget.dart';
 
 class CheckoutItemsScreen extends StatefulWidget {

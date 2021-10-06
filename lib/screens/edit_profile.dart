@@ -1,7 +1,8 @@
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app103/models/demo_image_list.dart';
+import 'package:flutter_app103/models/common/demo_image_list.dart';
+import 'package:flutter_app103/screens/upload_content.dart';
 
 class EditProfile extends StatefulWidget {
   EditProfile({Key? key}) : super(key: key);
@@ -87,6 +88,18 @@ class _EditProfileState extends State<EditProfile> {
                               style: TextStyle(),
                             )),
                         SizedBox(width: 10),
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.all(5),
+                                minimumSize: Size(5, 5)),
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => UploadContent()));
+                            },
+                            child: Text(
+                              "Upload Product",
+                              style: TextStyle(),
+                            )),
                       ],
                     )
                   ],

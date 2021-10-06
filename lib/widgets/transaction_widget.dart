@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app103/models/Seller_transactions.dart';
+import 'package:flutter_app103/models/order/Seller_transactions.dart';
 
 class TransactionWidget extends StatelessWidget {
   final Transaction transaction;

@@ -1,7 +1,7 @@
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app103/models/wishlist.dart';
+import 'package:flutter_app103/models/product/wishlist.dart';
 
 import 'package:flutter_app103/widgets/wishlist_widget.dart';
 

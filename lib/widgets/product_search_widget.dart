@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app103/models/product_search.dart';
+import 'package:flutter_app103/models/product/product_search.dart';
 
 class SearchedItem extends StatefulWidget {
   final ProductSearch productSearch;
