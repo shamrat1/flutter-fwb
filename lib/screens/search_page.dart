@@ -24,25 +24,25 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: Icon(
-          CupertinoIcons.arrow_left,
-          color: Colors.black,
-        ),
-        title: Text(
-          "FEMALEPRENEURE BAZAAR",
-          style: TextStyle(color: Colors.black38),
-        ),
-        actions: [
-          Icon(
-            CupertinoIcons.cart,
-            color: Colors.black,
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.white,
+      //   leading: Icon(
+      //     CupertinoIcons.arrow_left,
+      //     color: Colors.black,
+      //   ),
+      //   title: Text(
+      //     "FEMALEPRENEURE BAZAAR",
+      //     style: TextStyle(color: Colors.black38),
+      //   ),
+      //   actions: [
+      //     Icon(
+      //       CupertinoIcons.cart,
+      //       color: Colors.black,
+      //     ),
+      //   ],
+      // ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         child: Column(
           children: [
             TextField(

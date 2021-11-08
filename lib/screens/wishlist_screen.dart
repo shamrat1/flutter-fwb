@@ -70,55 +70,55 @@ class _WishlistScreenState extends State<WishlistScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: Icon(
-          CupertinoIcons.arrow_left,
-          color: Colors.black,
-        ),
-        title: Text(
-          "Wishlist",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.black38,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.refresh),
-            color: Colors.black,
-            onPressed: () {
-              setState(() {
-                wishlistlist
-                    .removeWhere((element) => element.isFavourite == false);
-              });
-            },
-          ),
-          Icon(
-            CupertinoIcons.cart,
-            color: Colors.black,
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.white,
+      //   leading: Icon(
+      //     CupertinoIcons.arrow_left,
+      //     color: Colors.black,
+      //   ),
+      //   title: Text(
+      //     "Wishlist",
+      //     textAlign: TextAlign.center,
+      //     style: TextStyle(
+      //       color: Colors.black38,
+      //     ),
+      //   ),
+      //   actions: [
+      //     IconButton(
+      //       icon: Icon(Icons.refresh),
+      //       color: Colors.black,
+      //       onPressed: () {
+      //         setState(() {
+      //           wishlistlist
+      //               .removeWhere((element) => element.isFavourite == false);
+      //         });
+      //       },
+      //     ),
+      //     Icon(
+      //       CupertinoIcons.cart,
+      //       color: Colors.black,
+      //     ),
+      //   ],
+      // ),
       extendBody: true,
-      bottomNavigationBar: FloatingNavbar(
-        backgroundColor: Colors.white,
-        unselectedItemColor: Colors.grey,
-        onTap: (int val) {
-          setState(() {
-            currentIndex = val;
-          });
-          //returns tab id which is user tapped
-        },
-        currentIndex: currentIndex,
-        items: [
-          FloatingNavbarItem(icon: Icons.home, title: 'Home'),
-          FloatingNavbarItem(icon: Icons.explore, title: 'Explore'),
-          FloatingNavbarItem(icon: Icons.favorite, title: 'Favourite'),
-          FloatingNavbarItem(
-              icon: Icons.verified_user_rounded, title: 'Profile'),
-        ],
-      ),
+      // bottomNavigationBar: FloatingNavbar(
+      //   backgroundColor: Colors.white,
+      //   unselectedItemColor: Colors.grey,
+      //   onTap: (int val) {
+      //     setState(() {
+      //       currentIndex = val;
+      //     });
+      //     //returns tab id which is user tapped
+      //   },
+      //   currentIndex: currentIndex,
+      //   items: [
+      //     FloatingNavbarItem(icon: Icons.home, title: 'Home'),
+      //     FloatingNavbarItem(icon: Icons.explore, title: 'Explore'),
+      //     FloatingNavbarItem(icon: Icons.favorite, title: 'Favourite'),
+      //     FloatingNavbarItem(
+      //         icon: Icons.verified_user_rounded, title: 'Profile'),
+      //   ],
+      // ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(

@@ -104,13 +104,14 @@ class _SignupPageState extends State<SignupPage> {
                 if(_codeSent)
                 ElevatedButton(
                   onPressed: () async {
-                    final AuthCredential credential = PhoneAuthProvider.credential(
-                      verificationId: _verificationId,
-                      smsCode: otpController.text,
-                    );
-
-                    UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
-                    _setUser(userCredential);
+                    if(nameController.text != null){
+                      final AuthCredential credential = PhoneAuthProvider.credential(
+                        verificationId: _verificationId,
+                        smsCode: otpController.text,
+                      );
+                      UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+                      _setUser(userCredential);
+                    }
                   },
                   child: Text("Verify & Login"),
                 ),

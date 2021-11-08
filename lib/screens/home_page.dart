@@ -2,7 +2,11 @@ import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.da
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app103/models/common/demo_image_list.dart';
+import 'package:flutter_app103/screens/profile_layout.dart';
+import 'package:flutter_app103/screens/search_page.dart';
+import 'package:flutter_app103/screens/wishlist_screen.dart';
 import 'package:flutter_app103/widgets/home_page_widget.dart';
+import 'package:logger/logger.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -13,6 +17,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,7 +108,20 @@ class _HomePageState extends State<HomePage> {
               icon: Icons.verified_user_rounded, title: 'Profile'),
         ],
       ),
-      body: ListView(
+      body:_attachView(),
+    );
+  }
+  Widget _attachView(){
+    switch (currentIndex){
+      case 3:
+        return ProfileLayout();
+      case 1:
+        return SearchPage();
+      case 2:
+        return WishlistScreen();
+
+      default:
+      return ListView(
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,22 +130,20 @@ class _HomePageState extends State<HomePage> {
               Text("Favourites"),
               SizedBox(
                 height: 120,
-                child: Expanded(
-                  child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: demoImages.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          width: 100,
-                          margin: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              image: DecorationImage(
-                                  image: NetworkImage(demoImages[index]),
-                                  fit: BoxFit.cover)),
-                        );
-                      }),
-                ),
+                child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: demoImages.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        width: 100,
+                        margin: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            image: DecorationImage(
+                                image: NetworkImage(demoImages[index]),
+                                fit: BoxFit.cover)),
+                      );
+                    }),
               ),
             ],
           ),
@@ -135,7 +151,7 @@ class _HomePageState extends State<HomePage> {
           HomePageWidget('Bakery'),
           HomePageWidget('Skincare'),
         ],
-      ),
-    );
+      );
+    }
   }
 }

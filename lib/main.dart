@@ -29,6 +29,8 @@ import 'package:flutter_app103/screens/wishlist_screen.dart';
 import 'package:flutter_app103/state/AuthenticatedUserState.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:logger/logger.dart';
 
 import 'screens/profile_layout.dart';
 
@@ -63,11 +65,17 @@ class _MyAppHomeState extends State<MyAppHome> {
   }
 
   void _setupAuthenticatedUser() async {
+    Geolocator.requestPermission();
+
+    await FlutterSecureStorage().write(key: "user_id", value: "6klhQ8IK9PPtfRXZXWHt");
     var userDocId = await FlutterSecureStorage().read(key: "user_id");
     if(userDocId != null){
       var user = await FirebaseFirestore.instance.collection("/users").doc(userDocId).get();
+      
+      Logger().wtf(user.exists);
       var users = await FirebaseFirestore.instance.collection("/users").where("phone",isEqualTo: user.get("phone")).limit(1).get();
       if(users.size > 0){
+        Logger().w(users.docs.first.data());
         context.read(authenticatedUserProvider.notifier).change(UserModel(
           documentId: user.id,
           user: users.docs.first,
@@ -84,10 +92,7 @@ class _MyAppHomeState extends State<MyAppHome> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      
-      body: _loading ? Center(child: CircularProgressIndicator(),) 
-      : (_authenticated ? HomePage() : SignupPage()),
-    );
+    return _loading ? Center(child: CircularProgressIndicator(),) 
+      : (_authenticated ? HomePage() : SignupPage());
   }
 }
