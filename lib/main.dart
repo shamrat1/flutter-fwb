@@ -32,5 +32,17 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: EditProfile()));
+  runApp(
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: MyApp(),
+    ),
+  );
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ProfileLayout();
+  }
 }
