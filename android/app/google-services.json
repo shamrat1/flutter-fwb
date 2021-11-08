@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "970775442302",
-    "project_id": "e-commerce101",
-    "storage_bucket": "e-commerce101.appspot.com"
+    "project_number": "935256664268",
+    "project_id": "ecom-marsa",
+    "storage_bucket": "ecom-marsa.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:970775442302:android:663fb3781d4f827c18792f",
+        "mobilesdk_app_id": "1:935256664268:android:faee2541d1c36b3960ba69",
         "android_client_info": {
-          "package_name": "com.example.flutter_app103"
+          "package_name": "com.shamrat.flutter_app103"
         }
       },
       "oauth_client": [
         {
-          "client_id": "970775442302-chpbjer0rcrvgel9ddat02d5fmfgck3p.apps.googleusercontent.com",
+          "client_id": "935256664268-qmi08k9170aaqa84dfj22tp8m56tusbp.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD1A5-2ntTnvV2Ea_6wKbXkC3RsgBZZN4Q"
+          "current_key": "AIzaSyDTCJAYCrmwvZ1q3_wk_AYgU5A3roekwi8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "970775442302-chpbjer0rcrvgel9ddat02d5fmfgck3p.apps.googleusercontent.com",
+              "client_id": "935256664268-qmi08k9170aaqa84dfj22tp8m56tusbp.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

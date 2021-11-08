@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,9 @@ import 'package:flutter_app103/screens/transaction.dart';
 import 'package:flutter_app103/screens/upload_content.dart';
 import 'package:flutter_app103/screens/verify_mobile_number.dart';
 import 'package:flutter_app103/screens/wishlist_screen.dart';
+import 'package:flutter_app103/state/AuthenticatedUserState.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'screens/profile_layout.dart';
 
@@ -33,16 +37,57 @@ void main() async {
   await Firebase.initializeApp();
 
   runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: MyApp(),
+    ProviderScope(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: MyAppHome(),
+      ),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyAppHome extends StatefulWidget {
+  
+  @override
+  State<MyAppHome> createState() => _MyAppHomeState();
+}
+
+class _MyAppHomeState extends State<MyAppHome> {
+  bool _loading = true;
+  bool _authenticated = false;
+
+  @override
+  void initState() { 
+    super.initState();
+    _setupAuthenticatedUser();
+  }
+
+  void _setupAuthenticatedUser() async {
+    var userDocId = await FlutterSecureStorage().read(key: "user_id");
+    if(userDocId != null){
+      var user = await FirebaseFirestore.instance.collection("/users").doc(userDocId).get();
+      var users = await FirebaseFirestore.instance.collection("/users").where("phone",isEqualTo: user.get("phone")).limit(1).get();
+      if(users.size > 0){
+        context.read(authenticatedUserProvider.notifier).change(UserModel(
+          documentId: user.id,
+          user: users.docs.first,
+        ));
+        setState(() {
+          _authenticated = true;
+        });
+      }
+    }
+    setState(() {
+      _loading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ProfileLayout();
+    return Scaffold(
+      
+      body: _loading ? Center(child: CircularProgressIndicator(),) 
+      : (_authenticated ? HomePage() : SignupPage()),
+    );
   }
 }
