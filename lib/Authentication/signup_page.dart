@@ -81,7 +81,6 @@ class _SignupPageState extends State<SignupPage> {
                 if(_codeSent)
                 TextField(
                   controller: otpController,
-                  obscureText: true,
                   decoration: InputDecoration(
                       prefixIcon: Icon(CupertinoIcons.lock),
                       hintText: "OTP"),
@@ -89,10 +88,17 @@ class _SignupPageState extends State<SignupPage> {
                 ),
                 if(_codeSent == false)
                 ElevatedButton(
-                  onPressed: () {
-                    print("+880"+phoneNumberController.text);
+                  onPressed: () async {
                     if(phoneNumberController.text.length == 10){
-                      _verify();
+                    FirebaseFirestore.instance.collection("/users").where("phone",isEqualTo: "+880"+phoneNumberController.text).limit(1).get().then((value){
+                      if(value.size > 0){
+                        setState(() {
+                          nameController.text = value.docs.first.data()["name"] ?? "";
+                        });
+                      }
+                    });
+                    // if(user)
+                    _verify();
                     }else{
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Phone Number invalid.")));
                     }
@@ -163,7 +169,7 @@ class _SignupPageState extends State<SignupPage> {
 
   void _setUser(UserCredential userCredential) async {
     
-    var users = await FirebaseFirestore.instance.collection("/users").where("mobile",isEqualTo: userCredential.user?.phoneNumber).limit(1).get();
+    var users = await FirebaseFirestore.instance.collection("/users").where("phone",isEqualTo: userCredential.user?.phoneNumber).limit(1).get();
     
     print(userCredential.user);
     print(userCredential.user?.phoneNumber);
@@ -181,8 +187,8 @@ class _SignupPageState extends State<SignupPage> {
         "verified" : true,
         "created_at" : DateTime.now().toString(),
       });
-      var userDoc = await FirebaseFirestore.instance.collection("/users").where("mobile", isEqualTo: userCredential.user?.phoneNumber).limit(1).get();
-      _setAuthenticatedUser(userDoc.docs.first);
+      var userDoc = await FirebaseFirestore.instance.collection("/users").where("phone", isEqualTo: userCredential.user?.phoneNumber).limit(1).get();
+      if(userDoc.size > 0) _setAuthenticatedUser(userDoc.docs.first);
       // than set authenticated user
     }
     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => HomePage()), (route) => false);
