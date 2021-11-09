@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -153,12 +155,34 @@ class _ProfileLayoutState extends State<ProfileLayout> {
                       var product = snapshot.data!.docs[index];
                       return Container(
                         decoration: BoxDecoration(
-                            color: Colors.blue,
                             borderRadius: BorderRadius.circular(20.0),
                             border: Border.all(),
-                                
+                            image: DecorationImage(
+                              image: NetworkImage(product["image"] ?? "https://via.placeholder.com/150"),
+                              fit: BoxFit.fill
+                            )
                         ),
-                        child: Center(child: Text(product["name"] ?? "Product Name"),),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              height: 50,
+                              width: 200,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0))
+                              ),
+                              child: Column(
+                                
+                                children: [
+                                  Text(product["name"] ?? "Product Name"),
+                                  Text((product["price"] ?? "" )+ " TK"),
+                            
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       );
                     });
               }

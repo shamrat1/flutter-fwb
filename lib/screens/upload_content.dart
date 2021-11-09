@@ -3,8 +3,12 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app103/state/AuthenticatedUserState.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 class UploadContent extends StatefulWidget {
   UploadContent({Key? key}) : super(key: key);
@@ -22,6 +26,8 @@ class _UploadContentState extends State<UploadContent> {
   var categories;
   Map<String,dynamic>? selectedCategory;
   String categoryLabel = "Select A Product Category.";
+  bool _loading = false;
+  firebase_storage.FirebaseStorage fireStorage = firebase_storage.FirebaseStorage.instance;
 
   @override
   void initState() { 
@@ -153,6 +159,7 @@ class _UploadContentState extends State<UploadContent> {
                                   onTap: (){
                                     setState(() {
                                       selectedCategory = cat?.data() as Map<String, dynamic>;
+                                      selectedCategory?.addAll({"id" : cat!.id});
                                       categoryLabel = cat?["name"] ?? "No Category Name";
                                     });
                                     Navigator.pop(context);
@@ -187,17 +194,96 @@ class _UploadContentState extends State<UploadContent> {
               )),
             ),
             SizedBox(height: 20,),
+            if(_loading == false)
             ElevatedButton(
               style: ElevatedButton.styleFrom(primary: Colors.indigo[50]),
-              onPressed: () {},
+              onPressed: () async {
+                setState(() {
+                  _loading = true;
+                });
+                if(_validate()){
+
+                }
+                var url = await uploadImage(File(image!.path));
+                var data = {
+                  "name" : _nameController.text,
+                  "description" : _productDescriptionController.text,
+                  "category" : selectedCategory,
+                  "price" : _priceController.text,
+                  "image" : url,
+                  "owner" : context.read(authenticatedUserProvider).documentId,
+                  "rating" : 0,
+                  "created_at" : DateTime.now()
+                };
+                FirebaseFirestore.instance.collection("products").add(data).whenComplete((){
+                  Navigator.of(context).pop();
+                });
+
+              },
               child: Text(
                 'Save',
                 style: TextStyle(color: Colors.indigo[900]),
+              ),
+            ),
+
+            if(_loading)
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(primary: Colors.indigo[50]),
+              onPressed: () async {},
+              child: Center(
+                child: CircularProgressIndicator(),
               ),
             )
           ],
         ),
       ),
     );
+  }
+
+  bool _validate(){
+    var msg = "";
+    
+    if(image == null){
+      msg += "Product Image is Required.";
+    }else if(_nameController.text.length == 0){
+      msg += " Product Name is Required.";
+    }else if(_productDescriptionController.text.length == 0){
+      msg += " Product Description is Required.";
+    
+    }else if(_priceController.text.length == 0){
+      msg += " Product Price is Required.";
+    }
+
+    if(msg != ""){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+      setState(() {
+        _loading = false;
+      });
+      return false;
+    }
+    return true;
+  }
+
+  Future<String> uploadImage(File _image) async {
+    try {
+      
+      var uploadTask = await fireStorage
+          .ref()
+          .child('products/${context.read(authenticatedUserProvider).documentId}_${DateTime.now()}')
+          .putFile(_image);
+
+      print('File Uploaded');
+
+      var returnURL = "";
+      returnURL = await (uploadTask).ref.getDownloadURL();
+      return returnURL;
+    } catch (e) {
+      Logger().e(e.toString());
+      setState(() {
+        _loading = false;
+      });
+
+      throw Exception(e);
+    }
   }
 }

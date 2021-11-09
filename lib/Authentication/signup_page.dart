@@ -158,11 +158,13 @@ class _SignupPageState extends State<SignupPage> {
         });
       },
       codeAutoRetrievalTimeout:(String verificationID){
+        if(mounted){
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Code Auto Retrieval Timeout")));
           setState(() {
             // _codeSent = false;
             _verificationId = verificationID;
           });
+        }
       },
     );
   }
