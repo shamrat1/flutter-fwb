@@ -3,6 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app103/state/AuthenticatedUserState.dart';
+import 'package:flutter_app103/state/SelectedAddressState.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
@@ -76,25 +77,39 @@ class _AddressState extends State<Address> {
           children: [
 
             if(!showNewAddressPage)
-            FutureBuilder<QuerySnapshot>(
-              future: address,
-              builder: (context, snapshot){
-                if(snapshot.connectionState == ConnectionState.waiting) return Center(
-                  child: CircularProgressIndicator(),
-                );
+            Consumer(
+              builder: (context, watch, child) {
+                var selectedAddress = watch(selectedAddressProvider);
 
-                return ListView.builder(
-                  itemBuilder: (context, index){
-                    
-                    var address = snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                    return ListTile(
-                      title: Text("${address["address"]}, ${address["landmark"]}"),
-                      subtitle: Text("${address["pincode"]}, ${address["city"]}"),
+                return FutureBuilder<QuerySnapshot>(
+                  future: address,
+                  builder: (context, snapshot){
+                    if(snapshot.connectionState == ConnectionState.waiting) return Center(
+                      child: CircularProgressIndicator(),
+                    );
+
+                    return ListView.builder(
+                      itemBuilder: (context, index){
+                        
+                        var address = snapshot.data!.docs[index].data() as Map<String, dynamic>;
+                        return ListTile(
+                          title: Text("${address["address"]}, ${address["landmark"]}"),
+                          subtitle: Text("${address["pincode"]}, ${address["city"]}"),
+                          tileColor: snapshot.data!.docs[index].id == selectedAddress.documentId ? Colors.blueAccent.shade100 : null,
+                          onTap: (){
+
+                            context.read(selectedAddressProvider.notifier).change(AddressModel(
+                              documentId: snapshot.data!.docs[index].id,
+                              data: address,
+                            ));
+                          },
+                        );
+                      },
+                      itemCount: snapshot.data!.size,
                     );
                   },
-                  itemCount: snapshot.data!.size,
                 );
-              },
+              }
             ),
             if(showNewAddressPage)
             Container(
@@ -243,6 +258,7 @@ class _AddressState extends State<Address> {
                             pinCodeController.text = "";
                             cityController.text = "";
                           });
+                          getAddresses();
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Address added successfully.")));
                         }
                         
