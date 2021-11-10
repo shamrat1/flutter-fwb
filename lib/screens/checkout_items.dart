@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app103/models/order/checkout_item_model.dart';
+import 'package:flutter_app103/screens/address.dart';
 import 'package:flutter_app103/state/CartState.dart';
 import 'package:flutter_app103/widgets/checkout_items_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -133,7 +134,11 @@ class _CheckoutItemsScreenState extends State<CheckoutItemsScreen> {
                             primary: Colors.indigo[50],
                             padding: EdgeInsets.all(10),
                             minimumSize: Size(10, 10)),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (ctx) => Address())
+                          );
+                        },
                         child: Text('Continue',
                             style: TextStyle(
                                 color: Colors.blueGrey[600],
