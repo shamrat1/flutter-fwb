@@ -97,7 +97,6 @@ class _SignupPageState extends State<SignupPage> {
                         });
                       }
                     });
-                    // if(user)
                     _verify();
                     }else{
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Phone Number invalid.")));

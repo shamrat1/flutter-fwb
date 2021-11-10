@@ -3,10 +3,15 @@ import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.da
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app103/models/common/demo_image_list.dart';
+import 'package:flutter_app103/models/order/checkout_item_model.dart';
+import 'package:flutter_app103/screens/checkout_items.dart';
 import 'package:flutter_app103/screens/profile_layout.dart';
 import 'package:flutter_app103/screens/search_page.dart';
 import 'package:flutter_app103/screens/wishlist_screen.dart';
+import 'package:flutter_app103/state/CartState.dart';
+import 'package:flutter_app103/widgets/ProductTile.dart';
 import 'package:flutter_app103/widgets/home_page_widget.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,21 +25,15 @@ class _HomePageState extends State<HomePage> {
   int currentIndex = 0;
   var homeCategories;
   var products;
-
-  _loadData() async {
+  @override
+  void initState() {
+    super.initState();
     homeCategories = FirebaseFirestore.instance.collection("categories").where("show_in_home",isEqualTo: true).get();
-    var catIds = <String>[];
-    homeCategories.docs.forEach((element) {
-      catIds.add(element.id);
-    });
-    // // products = FirebaseFirestore.instance.collection("products").where("category.id",whereIn: catIds).get();
-    // Logger().e(products.size);
-    // Logger().w(catIds);
   }
+  
 
   @override
   Widget build(BuildContext context) {
-    _loadData();
     return Scaffold(
       drawer: Drawer(
           child: ListView(
@@ -98,9 +97,44 @@ class _HomePageState extends State<HomePage> {
           style: TextStyle(color: Colors.black38),
         ),
         actions: [
-          Icon(
-            CupertinoIcons.cart,
-            color: Colors.black,
+          InkWell(
+            onTap: (){
+              Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => CheckoutItemsScreen()));
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                width: 40,
+                // height: ,
+                child: Stack(
+                  fit: StackFit.passthrough,
+                  children: [
+                    Icon(
+                      CupertinoIcons.cart,
+                      color: Colors.black,
+                    ),
+                    Positioned(
+                      right: 0,
+                      top: 0,
+                      child: Consumer(
+                        builder: (context, watch, child){
+                          var cartItems = watch(cartListPorvider);
+                          return Container(
+                            padding: EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                              color: Colors.amber,
+                              shape: BoxShape.circle,
+          
+                            ),
+                            child: Text(cartItems.length.toString(),style: TextStyle(fontSize: 11),),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -180,37 +214,7 @@ class _HomePageState extends State<HomePage> {
                                     //           image: NetworkImage(demoImages[index]),
                                     //           fit: BoxFit.cover)),
                                     // );
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20.0),
-                                          border: Border.all(),
-                                          image: DecorationImage(
-                                            image: NetworkImage(singleProduct["image"] ?? "https://via.placeholder.com/150"),
-                                            fit: BoxFit.fill
-                                          )
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: [
-                                          Container(
-                                            height: 50,
-                                            width: 100,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0))
-                                            ),
-                                            child: Column(
-                                              
-                                              children: [
-                                                Text(singleProduct["name"] ?? "Product Name"),
-                                                Text((singleProduct["price"] ?? "" )+ " TK"),
-                                          
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
+                                    return ProductTile(singleProduct: singleProduct,productID: products[productIndex].id,);
                                   });
                             }
                           ),

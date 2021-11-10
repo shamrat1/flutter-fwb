@@ -59,7 +59,7 @@ class _MyAppHomeState extends State<MyAppHome> {
   bool _authenticated = false;
 
   @override
-  void initState() { 
+  void initState() {
     super.initState();
     _setupAuthenticatedUser();
   }
@@ -70,10 +70,10 @@ class _MyAppHomeState extends State<MyAppHome> {
     if(userDocId != null){
       var user = await FirebaseFirestore.instance.collection("/users").doc(userDocId).get();
       
-      Logger().wtf(user.exists);
+      // Logger().wtf(user.exists);
       var users = await FirebaseFirestore.instance.collection("/users").where("phone",isEqualTo: user.get("phone")).limit(1).get();
       if(users.size > 0){
-        Logger().w(users.docs.first.data());
+        // Logger().w(users.docs.first.data());
         context.read(authenticatedUserProvider.notifier).change(UserModel(
           documentId: user.id,
           user: users.docs.first,
