@@ -1,11 +1,19 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app103/screens/OrderDetail.dart';
 import 'package:flutter_app103/state/AuthenticatedUserState.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+enum Viewer {
+  SELLER,
+  USER,
+}
+
 class OrdersPage extends StatefulWidget {
-  const OrdersPage({ Key? key }) : super(key: key);
+
+  const OrdersPage({ Key? key, this.viewer = Viewer.USER }) : super(key: key);
+  final Viewer viewer;
 
   @override
   _OrdersPageState createState() => _OrdersPageState();
@@ -15,10 +23,22 @@ class _OrdersPageState extends State<OrdersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(title: Text("Orders"),),
+      appBar: widget.viewer == Viewer.SELLER ? AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black38,),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          "FEMALEPRENEURE BAZAAR",
+          style: TextStyle(color: Colors.black38),
+        ),
+      ) : null,
       body: Container(
         child: FutureBuilder<QuerySnapshot>(
-          future: FirebaseFirestore.instance.collection("orders").where("user",isEqualTo: context.read(authenticatedUserProvider).documentId).get(),
+          future: widget.viewer == Viewer.USER ?
+          FirebaseFirestore.instance.collection("orders").where("user",isEqualTo: context.read(authenticatedUserProvider).documentId).get()
+          : FirebaseFirestore.instance.collection("orders").where("seller",isEqualTo: context.read(authenticatedUserProvider).documentId).get(),
           builder: (context, snapshot){
             if(snapshot.connectionState == ConnectionState.waiting) return Center(child: CircularProgressIndicator(),);
 
@@ -48,7 +68,7 @@ class _OrdersPageState extends State<OrdersPage> {
                     onTap: (){
                       Navigator.push(
                         context, MaterialPageRoute(
-                          builder: (ctx) => OrderDetails(order: order),
+                          builder: (ctx) => OrderDetails(order: order,viewer: widget.viewer,),
                         ),
                       );
                     },

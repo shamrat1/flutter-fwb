@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app103/screens/OrdersPage.dart';
 import 'package:flutter_app103/screens/upload_content.dart';
 import 'package:flutter_app103/state/AuthenticatedUserState.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -127,11 +128,25 @@ class _ProfileLayoutState extends State<ProfileLayout> {
               ],
             ),
             SizedBox(height: 10),
-            TextButton(onPressed: (){
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (ctx) => UploadContent())
-              );
-            }, child: Text("Add New Product")),
+            Row(
+              children: [
+                TextButton(onPressed: (){
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (ctx) => UploadContent())
+                  );
+                },
+                child: Text("Add New Product"),
+                ),
+                Spacer(),
+                TextButton(onPressed: (){
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (ctx) => OrdersPage(viewer: Viewer.SELLER,))
+                  );
+                },
+                child: Text("Shop Orders"),
+                ),
+              ],
+            ),
             SizedBox(height: 10),
             FutureBuilder<QuerySnapshot>(
               future: FirebaseFirestore.instance.collection("/products").where("owner",isEqualTo: user.id).get(),

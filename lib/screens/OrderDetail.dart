@@ -2,15 +2,29 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app103/screens/OrdersPage.dart';
 
-class OrderDetails extends StatelessWidget {
-  const OrderDetails({ Key? key, required this.order}) : super(key: key);
+class OrderDetails extends StatefulWidget {
+  OrderDetails({ Key? key, required this.order, this.viewer = Viewer.USER}) : super(key: key);
 
   final QueryDocumentSnapshot<Object?> order;
+  final Viewer viewer;
+
+  @override
+  State<OrderDetails> createState() => _OrderDetailsState();
+}
+
+class _OrderDetailsState extends State<OrderDetails> {
+  String status = "";
+
+  List<String> _statuses = [
+    "Pending", "Accepted", "Processing", "Shipped", "Delivered"
+  ];
 
   @override
   Widget build(BuildContext context) {
-    var data = order.data() as Map<String, dynamic>;
+    print(widget.viewer);
+    var data = widget.order.data() as Map<String, dynamic>;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -29,6 +43,83 @@ class OrderDetails extends StatelessWidget {
           children: [
             SizedBox(height: 20,),
             _getHeading("Order #"+data["orderCode"]),
+            if(widget.viewer == Viewer.SELLER)
+            Container(
+              child: Row(
+                children: [
+                  Text("Update Status",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  Spacer(),
+                  Row(
+                    children: [
+                      InkWell(
+                        onTap: (){
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context){
+                              return Container(
+                                height: MediaQuery.of(context).size.height * .50,
+                                child: ListView.builder(
+                                      itemBuilder: (context, index){
+                                        return ListTile(
+                                          title: Text(_statuses[index]),
+                                          onTap: (){
+                                            setState(() {
+                                              status = _statuses[index];
+                                            });
+                                            Navigator.pop(context);
+                                          },
+                                        );
+                                      },
+                                      itemCount: _statuses.length,
+                                    ),
+                              );
+                            }
+                          );
+                        },
+                        child: Text(
+                          status != "" ? status : "Select Status",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 10,),
+                      InkWell(
+                        onTap: () async {
+                          // order.
+                          await FirebaseFirestore.instance.collection("orders").doc(widget.order.id).update({
+                            "status": status
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Order Status Updated.")));
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).accentColor,
+                            shape: BoxShape.circle
+                          ),
+                          child: Icon(Icons.save, color: Colors.white,size: 20,),
+                        ),
+                        
+                      ),
+                    ],
+                  ),
+                  
+                ],
+              ),
+              padding: EdgeInsets.all(8),
+            ),
+            if(widget.viewer == Viewer.SELLER)
+            SizedBox(height: 15,),
             Container(
               // height: 250,
               // color: Colors.amber,
