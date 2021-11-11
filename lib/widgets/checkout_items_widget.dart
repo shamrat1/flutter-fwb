@@ -34,33 +34,48 @@ class _CheckoutItemWidgetState extends State<CheckoutItemWidget> {
               borderRadius: BorderRadius.all(Radius.circular(20))),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(items[widget.index].product["name"] ?? "No Product Name Found."),
-                  // Text(widget.checkout.shopName),
-                  Text(items[widget.index].price.toString()),
-                  Row(
-                    children: [
-                      Text("QTY:"),
-                      IconButton(
-                        icon: Icon(Icons.add_circle_outline_outlined),
-                        onPressed: () {
-                          context.read(cartListPorvider.notifier).increment(items[widget.index]);
-                        },
-                      ),
-                      Text(items[widget.index].quantity.toString()),
-                      IconButton(
-                        icon: Icon(Icons.remove_circle_outline),
-                        onPressed: () {
-                          context.read(cartListPorvider.notifier).decrement(items[widget.index]);
-                        },
-                      ),
-                    ],
-                  )
-                ],
+              ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: Image.network(items[widget.index].product["image"], height: 100, width: 100,fit: BoxFit.cover,),
+              ),
+              SizedBox(width: 10,),
+              SizedBox(
+                height: 100,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(items[widget.index].product["name"] ?? "No Product Name Found."),
+                        // Text(widget.checkout.shopName),
+                        Text(items[widget.index].price.toString()),
+                      ],
+                    ),
+                    
+                    Row(
+                      children: [
+                        Text("QTY:"),
+                        IconButton(
+                          icon: Icon(Icons.add_circle_outline_outlined),
+                          onPressed: () {
+                            context.read(cartListPorvider.notifier).increment(items[widget.index]);
+                          },
+                        ),
+                        Text(items[widget.index].quantity.toString()),
+                        IconButton(
+                          icon: Icon(Icons.remove_circle_outline),
+                          onPressed: () {
+                            context.read(cartListPorvider.notifier).decrement(items[widget.index]);
+                          },
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
             ],
           ),

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app103/models/common/demo_image_list.dart';
 import 'package:flutter_app103/models/order/checkout_item_model.dart';
+import 'package:flutter_app103/screens/OrdersPage.dart';
 import 'package:flutter_app103/screens/checkout_items.dart';
 import 'package:flutter_app103/screens/profile_layout.dart';
 import 'package:flutter_app103/screens/search_page.dart';
@@ -15,8 +16,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key}) : super(key: key);
-
+  HomePage({Key? key, this.index = 0}) : super(key: key);
+  final int index;
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -28,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    currentIndex = widget.index;
     homeCategories = FirebaseFirestore.instance.collection("categories").where("show_in_home",isEqualTo: true).get();
   }
   
@@ -152,7 +154,7 @@ class _HomePageState extends State<HomePage> {
         items: [
           FloatingNavbarItem(icon: Icons.home, title: 'Home'),
           FloatingNavbarItem(icon: Icons.explore, title: 'Explore'),
-          FloatingNavbarItem(icon: Icons.favorite, title: 'Favourite'),
+          FloatingNavbarItem(icon: Icons.list, title: 'Orders'),
           FloatingNavbarItem(
               icon: Icons.verified_user_rounded, title: 'Profile'),
         ],
@@ -167,7 +169,7 @@ class _HomePageState extends State<HomePage> {
       case 1:
         return SearchPage();
       case 2:
-        return WishlistScreen();
+        return OrdersPage();
 
       default:
 
@@ -214,7 +216,10 @@ class _HomePageState extends State<HomePage> {
                                     //           image: NetworkImage(demoImages[index]),
                                     //           fit: BoxFit.cover)),
                                     // );
-                                    return ProductTile(singleProduct: singleProduct,productID: products[productIndex].id,);
+                                    return Padding(
+                                      padding: const EdgeInsets.only(right: 8.0),
+                                      child: ProductTile(singleProduct: singleProduct,productID: products[productIndex].id,),
+                                    );
                                   });
                             }
                           ),

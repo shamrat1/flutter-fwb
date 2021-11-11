@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app103/screens/checkout_Payment.dart';
 import 'package:flutter_app103/state/AuthenticatedUserState.dart';
 import 'package:flutter_app103/state/SelectedAddressState.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -88,24 +89,62 @@ class _AddressState extends State<Address> {
                       child: CircularProgressIndicator(),
                     );
 
-                    return ListView.builder(
-                      itemBuilder: (context, index){
-                        
-                        var address = snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                        return ListTile(
-                          title: Text("${address["address"]}, ${address["landmark"]}"),
-                          subtitle: Text("${address["pincode"]}, ${address["city"]}"),
-                          tileColor: snapshot.data!.docs[index].id == selectedAddress.documentId ? Colors.blueAccent.shade100 : null,
-                          onTap: (){
+                    return Column(
+                      children: [
+                        Container(
+                          height: MediaQuery.of(context).size.height * .80 - 56,
+                          child: ListView.builder(
+                            itemBuilder: (context, index){
+                              
+                              var address = snapshot.data!.docs[index].data() as Map<String, dynamic>;
+                              return ListTile(
+                                title: Text("${address["address"]}, ${address["landmark"]}"),
+                                subtitle: Text("${address["pincode"]}, ${address["city"]}"),
+                                tileColor: snapshot.data!.docs[index].id == selectedAddress.documentId ? Colors.blueAccent.shade100 : null,
+                                onTap: (){
 
-                            context.read(selectedAddressProvider.notifier).change(AddressModel(
-                              documentId: snapshot.data!.docs[index].id,
-                              data: address,
-                            ));
-                          },
-                        );
-                      },
-                      itemCount: snapshot.data!.size,
+                                  context.read(selectedAddressProvider.notifier).change(AddressModel(
+                                    documentId: snapshot.data!.docs[index].id,
+                                    data: address,
+                                  ));
+                                },
+                              );
+                            },
+                            itemCount: snapshot.data!.size,
+                          ),
+                        ),
+                        Container(
+                          // color: Colors.white,
+                          height: MediaQuery.of(context).size.height * .10,
+                          child: Center(
+                            child: InkWell(
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (ctx) => CheckoutPayment()));
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                width: MediaQuery.of(context).size.width * .40,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: watch(selectedAddressProvider).documentId != null ? Theme.of(context).accentColor : Colors.grey,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      blurRadius: 3
+                                    )
+                                  ]
+                                ),
+                                child: Center(
+                                  child: Text("Continue", style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold
+                                  ),),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     );
                   },
                 );

@@ -19,8 +19,16 @@ class ProductTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
+        if(context.read(cartListPorvider).length > 0){
+          if(singleProduct["owner"] != context.read(cartListPorvider).first.product["owner"]){
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Products from different store already exists. Delete them first than try adding")));
+            return;
+          }
+
+        }
         var item =  context.read(cartListPorvider).where((element) => element.id == productID);
         if(item.length > 0){
+
           context.read(cartListPorvider.notifier).increment(item.first);
         }else{
           var cart = Cart(
@@ -47,8 +55,9 @@ class ProductTile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Container(
-              height: 50,
+              // height: 50,
               width: 100,
+              padding: EdgeInsets.all(5),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0))
@@ -56,7 +65,7 @@ class ProductTile extends StatelessWidget {
               child: Column(
                 
                 children: [
-                  Text(singleProduct["name"] ?? "Product Name"),
+                  Text(singleProduct["name"] ?? "Product Name",maxLines: 2, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,),
                   Text((singleProduct["price"] ?? "" )+ " TK"),
             
                 ],

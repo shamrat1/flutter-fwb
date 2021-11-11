@@ -41,6 +41,10 @@ class CartState extends StateNotifier<List<Cart>>{
     items.removeAt(index);
     state = items;
   }
+  void removeAll(){
+    
+    state = [];
+  }
 
   double getSubtotal(){
     double total = 0;

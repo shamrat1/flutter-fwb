@@ -21,11 +21,7 @@ class _CheckoutItemsScreenState extends State<CheckoutItemsScreen> {
     return Scaffold(
       backgroundColor: Colors.indigo[100],
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: Icon(
-          CupertinoIcons.arrow_left,
-          color: Colors.black,
-        ),
+        
         title: Text(
           "Femaleprenuere Bazar",
           style: TextStyle(color: Colors.black38),
