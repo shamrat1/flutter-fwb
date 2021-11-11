@@ -37,16 +37,12 @@ class _OrdersPageState extends State<OrdersPage> {
       body: Container(
         child: FutureBuilder<QuerySnapshot>(
           future: widget.viewer == Viewer.USER ?
-          FirebaseFirestore.instance.collection("orders").where("user",isEqualTo: context.read(authenticatedUserProvider).documentId).get()
-          : FirebaseFirestore.instance.collection("orders").where("seller",isEqualTo: context.read(authenticatedUserProvider).documentId).get(),
+          FirebaseFirestore.instance.collection("orders").where("user",isEqualTo: context.read(authenticatedUserProvider).documentId).orderBy("ordered_at", descending: true).get()
+          : FirebaseFirestore.instance.collection("orders").where("seller",isEqualTo: context.read(authenticatedUserProvider).documentId).orderBy("ordered_at", descending: true).get(),
           builder: (context, snapshot){
             if(snapshot.connectionState == ConnectionState.waiting) return Center(child: CircularProgressIndicator(),);
-
-            if(snapshot.data!.size == 0) return Center(
-              child: Text("No Orders yet."),
-            );
-
-            return ListView.builder(
+            if(snapshot.hasData){
+              return ListView.builder(
               itemCount: snapshot.data!.size,
               itemBuilder: (context, index){
                 var order = snapshot.data!.docs[index];
@@ -75,6 +71,10 @@ class _OrdersPageState extends State<OrdersPage> {
                   ),
                 );
               },
+            );
+            }
+            return Center(
+              child: Text("No Orders yet."),
             );
           },
         ),

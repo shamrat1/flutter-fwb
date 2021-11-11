@@ -139,7 +139,7 @@ class _CheckoutPaymentState extends State<CheckoutPayment> {
                                 "status" : "Pending",
                                 "user" : context.read(authenticatedUserProvider).documentId,
                                 "seller" : items.first.product["owner"],
-
+                                "ordered_at" : DateTime.now()
                               };
                               await order.add(data);
                               context.read(cartListPorvider.notifier).removeAll();

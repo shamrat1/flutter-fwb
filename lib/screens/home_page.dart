@@ -3,6 +3,7 @@ import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.da
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app103/models/common/demo_image_list.dart';
+import 'package:flutter_app103/models/message/message.dart';
 import 'package:flutter_app103/models/order/checkout_item_model.dart';
 import 'package:flutter_app103/screens/OrdersPage.dart';
 import 'package:flutter_app103/screens/checkout_items.dart';
@@ -68,7 +69,7 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.track_changes),
               title: Text('TrackDelivery')),
           ListTile(
-              onTap: () {},
+              // onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => Message)),
               leading: Icon(Icons.message),
               title: Text('Messages')),
           ListTile(
