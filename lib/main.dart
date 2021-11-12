@@ -49,7 +49,6 @@ void main() async {
 }
 
 class MyAppHome extends StatefulWidget {
-  
   @override
   State<MyAppHome> createState() => _MyAppHomeState();
 }
@@ -67,17 +66,24 @@ class _MyAppHomeState extends State<MyAppHome> {
   void _setupAuthenticatedUser() async {
     Geolocator.requestPermission();
     var userDocId = await FlutterSecureStorage().read(key: "user_id");
-    if(userDocId != null){
-      var user = await FirebaseFirestore.instance.collection("/users").doc(userDocId).get();
-      
+    if (userDocId != null) {
+      var user = await FirebaseFirestore.instance
+          .collection("/users")
+          .doc(userDocId)
+          .get();
+
       // Logger().wtf(user.exists);
-      var users = await FirebaseFirestore.instance.collection("/users").where("phone",isEqualTo: user.get("phone")).limit(1).get();
-      if(users.size > 0){
+      var users = await FirebaseFirestore.instance
+          .collection("/users")
+          .where("phone", isEqualTo: user.get("phone"))
+          .limit(1)
+          .get();
+      if (users.size > 0) {
         // Logger().w(users.docs.first.data());
         context.read(authenticatedUserProvider.notifier).change(UserModel(
-          documentId: user.id,
-          user: users.docs.first,
-        ));
+              documentId: user.id,
+              user: users.docs.first,
+            ));
         setState(() {
           _authenticated = true;
         });
@@ -90,7 +96,10 @@ class _MyAppHomeState extends State<MyAppHome> {
 
   @override
   Widget build(BuildContext context) {
-    return _loading ? Center(child: CircularProgressIndicator(),) 
-      : (_authenticated ? HomePage() : SignupPage());
+    return _loading
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : (_authenticated ? HomePage() : SignupPage());
   }
 }

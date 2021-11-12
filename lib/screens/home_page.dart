@@ -7,6 +7,7 @@ import 'package:flutter_app103/models/message/message.dart';
 import 'package:flutter_app103/models/order/checkout_item_model.dart';
 import 'package:flutter_app103/screens/OrdersPage.dart';
 import 'package:flutter_app103/screens/checkout_items.dart';
+import 'package:flutter_app103/screens/message_list_screen.dart';
 import 'package:flutter_app103/screens/profile_layout.dart';
 import 'package:flutter_app103/screens/search_page.dart';
 import 'package:flutter_app103/screens/wishlist_screen.dart';
@@ -31,9 +32,11 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     currentIndex = widget.index;
-    homeCategories = FirebaseFirestore.instance.collection("categories").where("show_in_home",isEqualTo: true).get();
+    homeCategories = FirebaseFirestore.instance
+        .collection("categories")
+        .where("show_in_home", isEqualTo: true)
+        .get();
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +72,8 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.track_changes),
               title: Text('TrackDelivery')),
           ListTile(
-              // onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => Message)),
+              onTap: () => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (ctx) => MessagesPage())),
               leading: Icon(Icons.message),
               title: Text('Messages')),
           ListTile(
@@ -101,8 +105,9 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           InkWell(
-            onTap: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => CheckoutItemsScreen()));
+            onTap: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (ctx) => CheckoutItemsScreen()));
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -120,16 +125,18 @@ class _HomePageState extends State<HomePage> {
                       right: 0,
                       top: 0,
                       child: Consumer(
-                        builder: (context, watch, child){
+                        builder: (context, watch, child) {
                           var cartItems = watch(cartListPorvider);
                           return Container(
                             padding: EdgeInsets.all(3),
                             decoration: BoxDecoration(
                               color: Colors.amber,
                               shape: BoxShape.circle,
-          
                             ),
-                            child: Text(cartItems.length.toString(),style: TextStyle(fontSize: 11),),
+                            child: Text(
+                              cartItems.length.toString(),
+                              style: TextStyle(fontSize: 11),
+                            ),
                           );
                         },
                       ),
@@ -160,11 +167,12 @@ class _HomePageState extends State<HomePage> {
               icon: Icons.verified_user_rounded, title: 'Profile'),
         ],
       ),
-      body:_attachView(),
+      body: _attachView(),
     );
   }
-  Widget _attachView(){
-    switch (currentIndex){
+
+  Widget _attachView() {
+    switch (currentIndex) {
       case 3:
         return ProfileLayout();
       case 1:
@@ -173,67 +181,82 @@ class _HomePageState extends State<HomePage> {
         return OrdersPage();
 
       default:
-
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-        child: FutureBuilder<QuerySnapshot>(
-          future: homeCategories,
-          builder: (context, snapshot){
-            if(snapshot.connectionState == ConnectionState.waiting) return Center(child: CircularProgressIndicator(),);
-            var cats = snapshot.data!.docs;
-            return ListView.builder(
-              itemBuilder: (context, index){
-                var item = cats[index].data() as Map<String, dynamic>;
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+          child: FutureBuilder<QuerySnapshot>(
+            future: homeCategories,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting)
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              var cats = snapshot.data!.docs;
+              return ListView.builder(
+                itemBuilder: (context, index) {
+                  var item = cats[index].data() as Map<String, dynamic>;
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(item["name"] ?? "No Name Found"),
-                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 10,
+                        ),
                         SizedBox(
                           height: 120,
                           child: FutureBuilder<QuerySnapshot>(
-                            future: FirebaseFirestore.instance.collection("products").where("category.id",isEqualTo: snapshot.data!.docs[index].id).get(),
-                            builder: (context, productSnapshot) {
+                              future: FirebaseFirestore.instance
+                                  .collection("products")
+                                  .where("category.id",
+                                      isEqualTo: snapshot.data!.docs[index].id)
+                                  .get(),
+                              builder: (context, productSnapshot) {
+                                if (productSnapshot.connectionState ==
+                                    ConnectionState.waiting)
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                var products = productSnapshot.data!.docs;
 
-                              if(productSnapshot.connectionState == ConnectionState.waiting) return Center(child: CircularProgressIndicator(),);
-                              var products = productSnapshot.data!.docs;
+                                if (products.length == 0) return Container();
 
-                              if(products.length == 0) return Container();
-
-                              return ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: products.length,
-                                  itemBuilder: (context, productIndex) {
-                                    var singleProduct = products[productIndex].data() as Map<String, dynamic>;
-                                    // return Container(
-                                    //   width: 100,
-                                    //   margin: EdgeInsets.all(5),
-                                    //   decoration: BoxDecoration(
-                                    //       borderRadius: BorderRadius.circular(20),
-                                    //       image: DecorationImage(
-                                    //           image: NetworkImage(demoImages[index]),
-                                    //           fit: BoxFit.cover)),
-                                    // );
-                                    return Padding(
-                                      padding: const EdgeInsets.only(right: 8.0),
-                                      child: ProductTile(singleProduct: singleProduct,productID: products[productIndex].id,),
-                                    );
-                                  });
-                            }
-                          ),
+                                return ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: products.length,
+                                    itemBuilder: (context, productIndex) {
+                                      var singleProduct = products[productIndex]
+                                          .data() as Map<String, dynamic>;
+                                      // return Container(
+                                      //   width: 100,
+                                      //   margin: EdgeInsets.all(5),
+                                      //   decoration: BoxDecoration(
+                                      //       borderRadius: BorderRadius.circular(20),
+                                      //       image: DecorationImage(
+                                      //           image: NetworkImage(demoImages[index]),
+                                      //           fit: BoxFit.cover)),
+                                      // );
+                                      return Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 8.0),
+                                        child: ProductTile(
+                                          singleProduct: singleProduct,
+                                          productID: products[productIndex].id,
+                                        ),
+                                      );
+                                    });
+                              }),
                         ),
                       ],
                     ),
-                );
-              },
-              itemCount: cats.length,
-            );
-          },
-        ),
-      );
+                  );
+                },
+                itemCount: cats.length,
+              );
+            },
+          ),
+        );
       // return ListView(
       //   children: [
       //     Column(
