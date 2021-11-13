@@ -6,6 +6,7 @@ import 'package:flutter_app103/models/common/demo_image_list.dart';
 import 'package:flutter_app103/models/message/message.dart';
 import 'package:flutter_app103/models/order/checkout_item_model.dart';
 import 'package:flutter_app103/screens/OrdersPage.dart';
+import 'package:flutter_app103/screens/Users_list_page.dart';
 import 'package:flutter_app103/screens/checkout_items.dart';
 import 'package:flutter_app103/screens/message_list_screen.dart';
 import 'package:flutter_app103/screens/profile_layout.dart';
@@ -62,11 +63,12 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.person),
               title: Text('About Us')),
           ListTile(
-              onTap: () {}, leading: Icon(Icons.star), title: Text('Rate Us')),
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => UsersListPage())),
+              leading: Icon(Icons.list_alt_sharp), title: Text('Users')),
           ListTile(
-              onTap: () {},
-              leading: Icon(Icons.reviews),
-              title: Text('Review')),
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => UsersListPage(type: UsersListType.PERSONAL,))),
+              leading: Icon(Icons.supervised_user_circle_sharp),
+              title: Text('Followers')),
           ListTile(
               onTap: () {},
               leading: Icon(Icons.track_changes),

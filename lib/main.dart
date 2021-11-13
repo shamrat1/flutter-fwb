@@ -65,6 +65,7 @@ class _MyAppHomeState extends State<MyAppHome> {
 
   void _setupAuthenticatedUser() async {
     Geolocator.requestPermission();
+    // await FlutterSecureStorage().write(key: "user_id",value : "6klhQ8IK9PPtfRXZXWHt");
     var userDocId = await FlutterSecureStorage().read(key: "user_id");
     if (userDocId != null) {
       var user = await FirebaseFirestore.instance

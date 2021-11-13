@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app103/screens/OrdersPage.dart';
+import 'package:flutter_app103/screens/Users_list_page.dart';
 import 'package:flutter_app103/screens/upload_content.dart';
 import 'package:flutter_app103/state/AuthenticatedUserState.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -71,9 +72,11 @@ class _ProfileLayoutState extends State<ProfileLayout> {
                             style: ElevatedButton.styleFrom(
                                 padding: EdgeInsets.all(5),
                                 minimumSize: Size(5, 5)),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (ctx) => UsersListPage(type : UsersListType.PERSONAL)));
+                            },
                             child: Text(
-                              "Follow",
+                              "Followers",
                               style: TextStyle(),
                             )),
                         // SizedBox(width: 10),

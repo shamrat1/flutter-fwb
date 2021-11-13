@@ -13,7 +13,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  String query = "";
+  String? query;
 
   // List<ProductSearch> searchResults = [
   //   ProductSearch("assets/cake1.jpeg", "Unicorn cake", "Cake House", 2600, 0),
@@ -70,7 +70,7 @@ class _SearchPageState extends State<SearchPage> {
               Container(
                 height: MediaQuery.of(context).size.height * 0.70,
                 child: StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance.collection("products").where("name",isEqualTo: query).snapshots(),
+                  stream: FirebaseFirestore.instance.collection("products").where("name",isGreaterThanOrEqualTo: query).snapshots(),
                   builder: (context, snapshot){
       
                     if(snapshot.connectionState == ConnectionState.waiting) return Center(child: CircularProgressIndicator(),);
