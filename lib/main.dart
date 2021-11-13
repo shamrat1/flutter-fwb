@@ -27,6 +27,7 @@ import 'package:flutter_app103/screens/upload_content.dart';
 import 'package:flutter_app103/screens/verify_mobile_number.dart';
 import 'package:flutter_app103/screens/wishlist_screen.dart';
 import 'package:flutter_app103/state/AuthenticatedUserState.dart';
+import 'package:flutter_app103/state/FollowingUsersState.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
@@ -67,6 +68,7 @@ class _MyAppHomeState extends State<MyAppHome> {
     Geolocator.requestPermission();
     // await FlutterSecureStorage().write(key: "user_id",value : "6klhQ8IK9PPtfRXZXWHt");
     var userDocId = await FlutterSecureStorage().read(key: "user_id");
+    // Logger().d("userdocid: $userDocId");
     if (userDocId != null) {
       var user = await FirebaseFirestore.instance
           .collection("/users")
@@ -81,10 +83,21 @@ class _MyAppHomeState extends State<MyAppHome> {
           .get();
       if (users.size > 0) {
         // Logger().w(users.docs.first.data());
+        var followingUsers = await FirebaseFirestore.instance.collection("follows")
+        .where("user_id",isEqualTo: userDocId)
+        .get();
+        if(followingUsers.size > 0){
+          List<String> following = [];
+          followingUsers.docs.forEach((element) {
+            following.add((element.data() as dynamic)["following_id"]);
+          });
+          context.read(FollowingUsersProvider.notifier).change(following);
+          Logger().wtf(following);
+        }
         context.read(authenticatedUserProvider.notifier).change(UserModel(
-              documentId: user.id,
-              user: users.docs.first,
-            ));
+          documentId: user.id,
+          user: users.docs.first,
+        ));
         setState(() {
           _authenticated = true;
         });

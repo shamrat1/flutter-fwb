@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app103/screens/MessageConversation.dart';
 import 'package:flutter_app103/state/AuthenticatedUserState.dart';
+import 'package:flutter_app103/state/FollowingUsersState.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -21,19 +22,30 @@ class UsersListPage extends StatefulWidget {
 class _UsersListPageState extends State<UsersListPage> {
 
   dynamic _getFollowButton(AsyncSnapshot<QuerySnapshot<Object?>> snapshot, int index){
+    var following = context.read(FollowingUsersProvider).contains(snapshot.data!.docs[index].id);
+
     return snapshot.data!.docs[index].id != context.read(authenticatedUserProvider).documentId ? IconButton(
         onPressed: () {
-          FirebaseFirestore.instance.collection("follows").add({
-            "users" : [context.read(authenticatedUserProvider).documentId,snapshot.data!.docs[index].id],
-            "user_id" : context.read(authenticatedUserProvider).documentId,
-            "following_id" : snapshot.data!.docs[index].id,
-            "user" : context.read(authenticatedUserProvider).user!.data(),
-            "following" : snapshot.data!.docs[index].data(),
-            "created_at" : DateTime.now(),
-          });
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Following ${(snapshot.data!.docs[index].data() as dynamic)["name"]}")));
+          if(!following){
+            FirebaseFirestore.instance.collection("follows").add({
+              "users" : [context.read(authenticatedUserProvider).documentId,snapshot.data!.docs[index].id],
+              "user_id" : context.read(authenticatedUserProvider).documentId,
+              "following_id" : snapshot.data!.docs[index].id,
+              "user" : context.read(authenticatedUserProvider).user!.data(),
+              "following" : snapshot.data!.docs[index].data(),
+              "created_at" : DateTime.now(),
+            });
+            var following = context.read(FollowingUsersProvider);
+            following.add(snapshot.data!.docs[index].id);
+            context.read(FollowingUsersProvider.notifier).change(following);
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Following ${(snapshot.data!.docs[index].data() as dynamic)["name"]}")));
+            setState(() {
+              print("reloading");
+            });
+          }
+         
         },
-        icon: Icon(Icons.person_add_alt),
+        icon: following ? Icon(Icons.check) : Icon(Icons.person_add_alt),
 
       ) : null ;
   }
@@ -78,7 +90,6 @@ class _UsersListPageState extends State<UsersListPage> {
               itemCount: snapshot.data!.size,
               itemBuilder: (context, index){
                 var data = snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                
                 return ListTile(
                   enabled: snapshot.data!.docs[index].id != context.read(authenticatedUserProvider).documentId,
                   trailing:  widget.type == UsersListType.GLOBAL ? _getFollowButton(snapshot, index) : _getUnfollowButton(snapshot, index, context),
