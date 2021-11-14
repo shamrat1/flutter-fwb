@@ -31,7 +31,9 @@ class _OrdersPageState extends State<OrdersPage> {
         ),
         title: Text(
           "FEMALEPRENEURE BAZAAR",
-          style: TextStyle(color: Colors.black38),
+          style: TextStyle(
+            color: Colors.black38,
+          ),
         ),
       ) : null,
       body: Container(

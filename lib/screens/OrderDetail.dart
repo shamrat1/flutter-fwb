@@ -141,15 +141,17 @@ class _OrderDetailsState extends State<OrderDetails> {
             // SizedBox(height: 20,),
 
             _getHeading("Items"),
-            for(var item in data["items"])
-            _getSingleItem(item["product"], item["quantity"])
+            for(var i = 0; i < data["items"].length; i++)
+            _getSingleItem(data["items"][i], data["items"][i]["quantity"],i)
           ],
         ),
       ),
     );
   }
 
-  Widget _getSingleItem(Map<String, dynamic> data, int qty){
+  Widget _getSingleItem(Map<String, dynamic> data, int qty, int index){
+    var orderData = widget.order.data() as Map<String, dynamic>;
+
     return Container(
           width: double.infinity,
           alignment: Alignment.center,
@@ -164,7 +166,7 @@ class _OrderDetailsState extends State<OrderDetails> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(5),
-                child: Image.network(data["image"], height: 100, width: 100,fit: BoxFit.cover,),
+                child: Image.network(data["product"]["image"], height: 100, width: 100,fit: BoxFit.cover,),
               ),
               SizedBox(width: 10,),
               SizedBox(
@@ -177,13 +179,32 @@ class _OrderDetailsState extends State<OrderDetails> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(data["name"] ?? "No Product Name Found."),
+                        Text(data["product"]["name"] ?? "No Product Name Found."),
                         Text("Quantity: $qty"),
-                        Text("${double.parse(data["price"]) * qty} Taka"),
+                        Text("${data["price"] * qty} Taka"),
                       ],
                     ),
                   ],
                 ),
+              ),
+              if(orderData["status"] == "Delivered")
+              Expanded(
+                child: Container(
+                  alignment: Alignment.bottomRight,
+                  child: InkWell(
+                    child: Text("Rate"),
+                    onTap: () async {
+                     DocumentSnapshot<Map<String, dynamic>> product = await FirebaseFirestore.instance.collection("products").doc(data["product_id"]).get();
+                      await FirebaseFirestore.instance.collection("orders").doc(widget.order.id).update({
+                        "rating_" +data["product_id"] : 4,
+                      });
+                      await FirebaseFirestore.instance.collection("products").doc(data["product_id"]).update({
+                        "rating" : product.data()!["rating"] + 4,
+                        "ratingCount" : (product.data()!["ratingCount"] ?? 0) + 1
+                      });
+                    },  
+                  ),
+                ) 
               ),
             ],
           ),
