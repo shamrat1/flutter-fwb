@@ -11,6 +11,7 @@ import 'package:flutter_app103/screens/checkout_items.dart';
 import 'package:flutter_app103/screens/message_list_screen.dart';
 import 'package:flutter_app103/screens/profile_layout.dart';
 import 'package:flutter_app103/screens/search_page.dart';
+import 'package:flutter_app103/screens/track_delivery.dart';
 import 'package:flutter_app103/screens/wishlist_screen.dart';
 import 'package:flutter_app103/state/CartState.dart';
 import 'package:flutter_app103/widgets/ProductTile.dart';
@@ -70,7 +71,7 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.supervised_user_circle_sharp),
               title: Text('Followers')),
           ListTile(
-              onTap: () {},
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => TrackDelivery())),
               leading: Icon(Icons.track_changes),
               title: Text('TrackDelivery')),
           ListTile(

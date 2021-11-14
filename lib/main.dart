@@ -92,7 +92,7 @@ class _MyAppHomeState extends State<MyAppHome> {
             following.add((element.data() as dynamic)["following_id"]);
           });
           context.read(FollowingUsersProvider.notifier).change(following);
-          Logger().wtf(following);
+          // Logger().wtf(following);
         }
         context.read(authenticatedUserProvider.notifier).change(UserModel(
           documentId: user.id,

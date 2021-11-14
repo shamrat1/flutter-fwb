@@ -49,6 +49,7 @@ class _UsersListPageState extends State<UsersListPage> {
 
       ) : null ;
   }
+  
   Widget _getUnfollowButton(AsyncSnapshot<QuerySnapshot<Object?>> snapshot, int index, BuildContext context){
     return IconButton(
         onPressed: () {
