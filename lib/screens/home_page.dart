@@ -7,6 +7,7 @@ import 'package:flutter_app103/models/message/message.dart';
 import 'package:flutter_app103/models/order/checkout_item_model.dart';
 import 'package:flutter_app103/screens/OrdersPage.dart';
 import 'package:flutter_app103/screens/Users_list_page.dart';
+import 'package:flutter_app103/screens/Wishlist.dart';
 import 'package:flutter_app103/screens/checkout_items.dart';
 import 'package:flutter_app103/screens/message_list_screen.dart';
 import 'package:flutter_app103/screens/profile_layout.dart';
@@ -60,9 +61,9 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.contact_page),
               title: Text('Contact Us')),
           ListTile(
-              onTap: () {},
-              leading: Icon(Icons.person),
-              title: Text('About Us')),
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => Wishlist())),
+              leading: Icon(Icons.favorite, color: Colors.redAccent.shade200,),
+              title: Text('Wishlist')),
           ListTile(
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => UsersListPage())),
               leading: Icon(Icons.list_alt_sharp), title: Text('Users')),
@@ -208,7 +209,7 @@ class _HomePageState extends State<HomePage> {
                           height: 10,
                         ),
                         SizedBox(
-                          height: 120,
+                          height: 180,
                           child: FutureBuilder<QuerySnapshot>(
                               future: FirebaseFirestore.instance
                                   .collection("products")
@@ -240,7 +241,9 @@ class _HomePageState extends State<HomePage> {
                                       //           image: NetworkImage(demoImages[index]),
                                       //           fit: BoxFit.cover)),
                                       // );
-                                      return Padding(
+                                      return Container(
+                                        width: 180,
+                                        height: 180,
                                         padding:
                                             const EdgeInsets.only(right: 8.0),
                                         child: ProductTile(

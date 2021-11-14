@@ -27,6 +27,7 @@ import 'package:flutter_app103/screens/upload_content.dart';
 import 'package:flutter_app103/screens/verify_mobile_number.dart';
 import 'package:flutter_app103/screens/wishlist_screen.dart';
 import 'package:flutter_app103/state/AuthenticatedUserState.dart';
+import 'package:flutter_app103/state/FavoriteProductsState.dart';
 import 'package:flutter_app103/state/FollowingUsersState.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -98,6 +99,7 @@ class _MyAppHomeState extends State<MyAppHome> {
           documentId: user.id,
           user: users.docs.first,
         ));
+        context.read(favoriteProductsProvider.notifier).fetch();
         setState(() {
           _authenticated = true;
         });
