@@ -67,7 +67,12 @@ class _MyAppHomeState extends State<MyAppHome> {
 
   void _setupAuthenticatedUser() async {
     Geolocator.requestPermission();
+
+    // -------------
+    // to auto login uncomment the following line
+    // -------------
     // await FlutterSecureStorage().write(key: "user_id",value : "6klhQ8IK9PPtfRXZXWHt");
+
     var userDocId = await FlutterSecureStorage().read(key: "user_id");
     // Logger().d("userdocid: $userDocId");
     if (userDocId != null) {
@@ -84,10 +89,11 @@ class _MyAppHomeState extends State<MyAppHome> {
           .get();
       if (users.size > 0) {
         // Logger().w(users.docs.first.data());
-        var followingUsers = await FirebaseFirestore.instance.collection("follows")
-        .where("user_id",isEqualTo: userDocId)
-        .get();
-        if(followingUsers.size > 0){
+        var followingUsers = await FirebaseFirestore.instance
+            .collection("follows")
+            .where("user_id", isEqualTo: userDocId)
+            .get();
+        if (followingUsers.size > 0) {
           List<String> following = [];
           followingUsers.docs.forEach((element) {
             following.add((element.data() as dynamic)["following_id"]);
@@ -96,9 +102,9 @@ class _MyAppHomeState extends State<MyAppHome> {
           // Logger().wtf(following);
         }
         context.read(authenticatedUserProvider.notifier).change(UserModel(
-          documentId: user.id,
-          user: users.docs.first,
-        ));
+              documentId: user.id,
+              user: users.docs.first,
+            ));
         context.read(favoriteProductsProvider.notifier).fetch();
         setState(() {
           _authenticated = true;
