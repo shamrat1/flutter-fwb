@@ -83,9 +83,7 @@ class ProductTile extends StatelessWidget {
                     ),
                   ],
                 ),
-                if ((singleProduct["rating"] /
-                        (singleProduct["ratingCount"] ?? 1)) >
-                    0)
+                if (singleProduct["rating"] != null && singleProduct["ratingCount"] != null && (singleProduct["rating"] / (singleProduct["ratingCount"] ?? 1)) > 0)
                   Positioned(
                     left: 5,
                     top: 3,

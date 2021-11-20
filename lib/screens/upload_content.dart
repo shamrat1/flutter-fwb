@@ -204,7 +204,7 @@ class _UploadContentState extends State<UploadContent> {
                 if(_validate()){
 
                 }
-                var url = await uploadImage(File(image!.path));
+                var url = await uploadImage(File(image!.path),"products");
                 var data = {
                   "name" : _nameController.text,
                   "description" : _productDescriptionController.text,
@@ -264,12 +264,12 @@ class _UploadContentState extends State<UploadContent> {
     return true;
   }
 
-  Future<String> uploadImage(File _image) async {
+  Future<String> uploadImage(File _image,String collection) async {
     try {
       
       var uploadTask = await fireStorage
           .ref()
-          .child('products/${context.read(authenticatedUserProvider).documentId}_${DateTime.now()}')
+          .child('$collection/${context.read(authenticatedUserProvider).documentId}_${DateTime.now()}')
           .putFile(_image);
 
       print('File Uploaded');

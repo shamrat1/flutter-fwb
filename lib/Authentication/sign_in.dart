@@ -79,7 +79,7 @@ class _EmailPasswordFormState extends State<EmailPasswordForm> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
-  } //TODO
+  } 
 
   void _signInWithEmailAndPassword() async {
     final User? user = (await FirebaseAuth.instance.signInWithEmailAndPassword(

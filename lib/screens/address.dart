@@ -119,7 +119,9 @@ class _AddressState extends State<Address> {
                           child: Center(
                             child: InkWell(
                               onTap: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (ctx) => CheckoutPayment()));
+                                if(context.read(selectedAddressProvider).documentId != null){
+                                  Navigator.push(context, MaterialPageRoute(builder: (ctx) => CheckoutPayment()));
+                                }
                               },
                               child: Container(
                                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
