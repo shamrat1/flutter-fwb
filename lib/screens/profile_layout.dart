@@ -14,6 +14,7 @@ import 'package:logger/logger.dart';
 class ProfileLayout extends StatefulWidget {
   ProfileLayout({Key? key}) : super(key: key);
 
+
   @override
   _ProfileLayoutState createState() => _ProfileLayoutState();
 }
@@ -217,7 +218,7 @@ class _ProfileLayoutState extends State<ProfileLayout> {
                             childAspectRatio: 5 / 6),
                         itemCount: snapshot.data?.docs.length,
                         itemBuilder: (context, index) {
-                          var product = snapshot.data!.docs[index];
+                          var product = snapshot.data!.docs[index].data() as dynamic;
                           return Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20.0),

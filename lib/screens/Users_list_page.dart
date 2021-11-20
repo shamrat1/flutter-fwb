@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app103/screens/MessageConversation.dart';
+import 'package:flutter_app103/screens/UsersProfile.dart';
 import 'package:flutter_app103/state/AuthenticatedUserState.dart';
 import 'package:flutter_app103/state/FollowingUsersState.dart';
 import 'package:intl/intl.dart';
@@ -97,69 +98,14 @@ class _UsersListPageState extends State<UsersListPage> {
                   title: Text( widget.type == UsersListType.GLOBAL ? data["name"] : data["following"]["name"]),
                   subtitle: Text(data["created_at"] != null ? "Joined ${DateFormat("dd-MM-y").format(data["created_at"] is String ? DateTime.parse(data["created_at"]) : data["created_at"].toDate())}" : "" ),
                   onTap: () async {
-                    if(widget.type == UsersListType.PERSONAL){
-                      DocumentReference<Map<String, dynamic>>? messageObj;
-
-                      var existingThread = await FirebaseFirestore.instance
-                      .collection("messages")
-                      .where("users", arrayContainsAny: [context.read(authenticatedUserProvider).documentId, (snapshot.data!.docs[index].data() as dynamic)["following_id"]]).get();
-                      // .where("users",arrayContains: (snapshot.data!.docs[index].data() as dynamic)["following_id"])
-                      // .get();
-                      // Logger().wtf(existingThread.docs.first.data());
-                      if(existingThread.size > 0){
-                        var single = existingThread.docs.where((element){
-                          var users = (element.data() as dynamic)["users"] as List<dynamic>;
-                          return users.contains(context.read(authenticatedUserProvider).documentId) && users.contains((snapshot.data!.docs[index].data() as dynamic)["following_id"]);
-                        });
-                        if(single.length > 0){
-                          // Logger().wtf("${context.read(authenticatedUserProvider).documentId} | ${(snapshot.data!.docs[index].data() as dynamic)["following_id"]} | ${single.first.data()}");
-                          Navigator.push(context, MaterialPageRoute(builder: (ctx) => MessageConversationPage(
-                            receiverName: data["following"]["name"],
-                            messageID: single.first.id,
-                            users: (single.first.data() as dynamic)["users"],
-                          )));
-                          return;
-                        }else{
-                          messageObj = await FirebaseFirestore.instance.collection("messages").add({
-                            "users" : [context.read(authenticatedUserProvider).documentId,(snapshot.data!.docs[index].data() as dynamic)["following_id"]],
-                            "user_0" : context.read(authenticatedUserProvider).user!.data(),
-                            "user_1" : (snapshot.data!.docs[index].data() as dynamic)["following"],
-                            "last_message" : "Start Messaging",
-                            // "last_message_at" : 
-                          });
-                        }
-                      }else{
-                        messageObj = await FirebaseFirestore.instance.collection("messages").add({
-                          "users" : [context.read(authenticatedUserProvider).documentId,(snapshot.data!.docs[index].data() as dynamic)["following_id"]],
-                          "user_0" : context.read(authenticatedUserProvider).user!.data(),
-                          "user_1" : (snapshot.data!.docs[index].data() as dynamic)["following"],
-                          "last_message" : "Start Messaging",
-                          // "last_message_at" :
-                        });
-                      }
-                      var obj = await messageObj.get();
-                      Navigator.push(context, MaterialPageRoute(builder: (ctx) => MessageConversationPage(
-                        receiverName: data["following"]["name"],
-                        messageID: obj.id,
-                        users: (obj.data() as dynamic)["users"],
+                    // Logger().d(data);
+                    // Logger().d(snapshot.data!.docs[index].id);
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (ctx) => UserProfile(
+                      userid: widget.type == UsersListType.GLOBAL ? snapshot.data!.docs[index].id : data["following_id"],
+                       data: data,
                       )));
-                      // FirebaseFirestore.instance.collection("messages").add({
-                      //   "users" : [context.read(authenticatedUserProvider).documentId,(snapshot.data!.docs[index].data() as dynamic)["following_id"]],
-                      //   "user_0" : context.read(authenticatedUserProvider).user!.data(),
-                      //   "user_1" : (snapshot.data!.docs[index].data() as dynamic)["following"],
-                      //   "last_message" : "Start Messaging",
-                      //   // "last_message_at" : 
-                      // });
-                      // Logger().d({
-                      //   "users" : [context.read(authenticatedUserProvider).documentId,(snapshot.data!.docs[index].data() as dynamic)["following_id"]],
-                      //   "user_0" : context.read(authenticatedUserProvider).user!.data(),
-                      //   "user_1" : (snapshot.data!.docs[index].data() as dynamic)["following"],
-                      //   "last_message" : "Start Messaging",
-                      //   // "last_message_at" : 
-                      // });
-                    }else{
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Follow ${(snapshot.data!.docs[index].data() as dynamic)["name"]} & go to followers list to start conversations")));
-                    }
+                    
                   },
                 );
               },
