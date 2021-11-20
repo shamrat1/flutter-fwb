@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
           ListTile(
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => UsersListPage(type: UsersListType.PERSONAL,))),
               leading: Icon(Icons.supervised_user_circle_sharp),
-              title: Text('Followers')),
+              title: Text('Following')),
           ListTile(
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => TrackDelivery())),
               leading: Icon(Icons.track_changes),

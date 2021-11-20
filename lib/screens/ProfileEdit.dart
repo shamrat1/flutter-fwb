@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app103/screens/MapScreen.dart';
 import 'package:flutter_app103/screens/upload_content.dart';
 import 'package:flutter_app103/state/AuthenticatedUserState.dart';
 import 'package:image_picker/image_picker.dart';
@@ -52,6 +53,12 @@ class _ProfileEditState extends State<ProfileEdit> {
           "Edit Profile",
           style: TextStyle(color: Colors.black38),
         ),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => MapScreen())),
+            icon: Icon(Icons.location_on_rounded, color: Colors.black,),
+          ),
+        ],
       ),
       body: Container(
         height: MediaQuery.of(context).size.height - 56,

@@ -1,44 +1,25 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app103/Authentication/sign_in.dart';
-import 'package:flutter_app103/models/message/message.dart';
-import 'package:flutter_app103/screens/address.dart';
-import 'package:flutter_app103/screens/checkout_101.dart';
-import 'package:flutter_app103/screens/checkout_Payment.dart';
-import 'package:flutter_app103/screens/checkout_address.dart';
-import 'package:flutter_app103/screens/checkout_items.dart';
-import 'package:flutter_app103/screens/delivery_details_screen.dart';
-import 'package:flutter_app103/screens/edit_profile.dart';
-import 'package:flutter_app103/Authentication/register_email.dart';
-import 'package:flutter_app103/screens/empty_cart.dart';
-import 'package:flutter_app103/screens/home_page.dart';
-import 'package:flutter_app103/screens/map_screen.dart';
-import 'package:flutter_app103/screens/message_list_screen.dart';
-import 'package:flutter_app103/screens/notification_screen.dart';
-import 'package:flutter_app103/screens/order_placed.dart';
-import 'package:flutter_app103/screens/otp.dart';
-import 'package:flutter_app103/screens/personal_information.dart';
 //import 'package:flutter_app103/screens/search_page.dart';
 import 'package:flutter_app103/Authentication/signup_page.dart';
-import 'package:flutter_app103/screens/transaction.dart';
-import 'package:flutter_app103/screens/upload_content.dart';
-import 'package:flutter_app103/screens/verify_mobile_number.dart';
-import 'package:flutter_app103/screens/wishlist_screen.dart';
+import 'package:flutter_app103/models/NotificationMessage.dart';
+import 'package:flutter_app103/screens/home_page.dart';
 import 'package:flutter_app103/state/AuthenticatedUserState.dart';
 import 'package:flutter_app103/state/FavoriteProductsState.dart';
 import 'package:flutter_app103/state/FollowingUsersState.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:logger/logger.dart';
-
-import 'screens/profile_layout.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(messageHandler);
 
   runApp(
     ProviderScope(
@@ -48,8 +29,21 @@ void main() async {
       ),
     ),
   );
-}
 
+    
+}
+Future<void> messageHandler(RemoteMessage message) async {
+    final providerContainer = ProviderContainer();
+    final storage = new FlutterSecureStorage();
+
+    providerContainer.read(messageListProvider.notifier).add(NotificationMessage(
+            title: message.notification!.title!,
+            body: message.notification!.body!,
+            id: DateTime.now().toString()));
+        var string = json.encode(providerContainer.read(messageListProvider));
+        // print('Notifications: $string');
+        await storage.write(key: "notifications", value: string);
+  }
 class MyAppHome extends StatefulWidget {
   @override
   State<MyAppHome> createState() => _MyAppHomeState();
@@ -58,11 +52,61 @@ class MyAppHome extends StatefulWidget {
 class _MyAppHomeState extends State<MyAppHome> {
   bool _loading = true;
   bool _authenticated = false;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   @override
   void initState() {
     super.initState();
+    _firebaseMessaging.getToken();
     _setupAuthenticatedUser();
+    _initFirebaseMessingConfigs();
+    FirebaseMessaging.onMessage.listen((event) async {
+       
+          context.read(messageListProvider.notifier).add(
+            NotificationMessage(
+              title: event.notification!.title!,
+              body: event.notification!.body!,
+              id: DateTime.now().toString(),
+            ),
+          );
+          var string = json.encode(context.read(messageListProvider));
+          await FlutterSecureStorage().write(key: "notifications", value: string);
+
+      });
+
+      FirebaseMessaging.onMessageOpenedApp.listen((event) async {
+        
+          context.read(messageListProvider.notifier).add(
+            NotificationMessage(
+              title: event.notification!.title!,
+              body: event.notification!.body!,
+              id: DateTime.now().toString(),
+            ),
+          );
+          var string = json.encode(context.read(messageListProvider));
+          await FlutterSecureStorage().write(key: "notifications", value: string);
+
+      });
+  }
+
+    void _initFirebaseMessingConfigs() async {
+    NotificationSettings settings = await _firebaseMessaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+    } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+      print('User granted provisional permission');
+    } else {
+      print('User declined or has not accepted permission');
+    }
   }
 
   void _setupAuthenticatedUser() async {

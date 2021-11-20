@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_app103/models/Cart.dart';
+import 'package:flutter_app103/screens/ProductPage.dart';
 import 'package:flutter_app103/state/AuthenticatedUserState.dart';
 import 'package:flutter_app103/state/CartState.dart';
 import 'package:flutter_app103/state/FavoriteProductsState.dart';
@@ -19,29 +20,13 @@ class ProductTile extends StatelessWidget {
 
   bool isWishlisted = false;
   FavoriteProduct? wishlistObj;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (context.read(cartListPorvider).length > 0) {
-          if (singleProduct["owner"] !=
-              context.read(cartListPorvider).first.product["owner"]) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(
-                    "Products from different store already exists. Delete them first than try adding")));
-            return;
-          }
-        }
-        var item = context
-            .read(cartListPorvider)
-            .where((element) => element.id == productID);
-        if (item.length > 0) {
-          context.read(cartListPorvider.notifier).increment(item.first);
-        } else {
-          var cart = Cart(productID, singleProduct,
-              double.parse(singleProduct["price"] ?? 0), 1);
-          context.read(cartListPorvider.notifier).add(cart);
-        }
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(product: singleProduct, productID: productID,)));
+        
 
         // Logger().w(singleProduct);
       },

@@ -31,8 +31,7 @@ class _MapScreenState extends State<MapScreen> {
         LocationOptions(
           locationButton(),
           onLocationUpdate: (LatLngData? ld) {
-            print(
-                'Location updated: ${ld?.location} (accuracy: ${ld?.accuracy})');
+            print('Location updated: ${ld?.location} (accuracy: ${ld?.accuracy})');
           },
           onLocationRequested: (LatLngData? ld) {
             if (ld == null) {
