@@ -3,13 +3,17 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app103/screens/MapScreen.dart';
 import 'package:flutter_app103/screens/OrdersPage.dart';
 import 'package:flutter_app103/screens/ProductPage.dart';
 import 'package:flutter_app103/screens/ProfileEdit.dart';
 import 'package:flutter_app103/screens/Users_list_page.dart';
+import 'package:flutter_app103/screens/message_list_screen.dart';
 import 'package:flutter_app103/screens/upload_content.dart';
 import 'package:flutter_app103/state/AuthenticatedUserState.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
 
 class ProfileLayout extends StatefulWidget {
@@ -129,17 +133,18 @@ class _ProfileLayoutState extends State<ProfileLayout> {
                                 style: ElevatedButton.styleFrom(
                                     padding: EdgeInsets.all(5),
                                     minimumSize: Size(5, 5)),
-                                onPressed: () {},
+                                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => MessagesPage())),
                                 child: Text(
                                   "Message",
                                   style: TextStyle(),
                                 )),
                             // SizedBox(width: 10),
+                            if(user.data()["latitude"] != null && user.data()["longitude"] != null)
                             ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                     padding: EdgeInsets.all(5),
                                     minimumSize: Size(5, 5)),
-                                onPressed: () {},
+                                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => MapScreen(initalPosition: LatLng(user.data()["latitude"] ,user.data()["longitude"]),))),
                                 child: Text(
                                   "Location",
                                   style: TextStyle(),

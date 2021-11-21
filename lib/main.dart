@@ -41,7 +41,6 @@ Future<void> messageHandler(RemoteMessage message) async {
           body: message.notification!.body!,
           id: DateTime.now().toString()));
       var string = json.encode(providerContainer.read(messageListProvider));
-      // print('Notifications: $string');
       await storage.write(key: "notifications", value: string);
 }
 class MyAppHome extends StatefulWidget {

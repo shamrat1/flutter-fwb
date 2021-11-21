@@ -2,11 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app103/constants.dart';
 import 'package:flutter_app103/screens/checkout_Payment.dart';
 import 'package:flutter_app103/state/AuthenticatedUserState.dart';
 import 'package:flutter_app103/state/SelectedAddressState.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
+import 'package:google_geocoding/google_geocoding.dart';
 
 class Address extends StatefulWidget {
   Address({Key? key}) : super(key: key);
@@ -26,6 +30,7 @@ class _AddressState extends State<Address> {
   bool showNewAddressPage = false;
   List listItem = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5"];
   var address;
+  bool _loading = false;
 
   @override
   void initState() {
@@ -259,6 +264,7 @@ class _AddressState extends State<Address> {
                         ],
                       ),
                     ),
+                    
                     Padding(
                       padding: EdgeInsets.all(8),
                       child: Row(
@@ -281,7 +287,7 @@ class _AddressState extends State<Address> {
                     // ),
                     ElevatedButton(
                       onPressed: () async {
-                        if(_validate()){
+                        if(_loading != true && _validate()){
                           var data = {
                             "address" : addressController.text,
                             "landmark" : landMarkController.text,
@@ -304,7 +310,43 @@ class _AddressState extends State<Address> {
                         }
                         
                       },
-                      child: Text("Save Address"),
+                      child: _loading ? CircularProgressIndicator() : Text("Save Address"),
+                    ),
+
+                    // SizedBox(height: 20,),
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: TextButton(
+                        onPressed: () async {
+                          setState(() {
+                            _loading = true;
+                          });
+                          var position = await Geolocator.getCurrentPosition();
+                          var geoCoding = GoogleGeocoding(googleApiKey);
+                          GeocodingResponse? response = await geoCoding.geocoding.getReverse(LatLon(position.latitude, position.longitude));
+
+                          if(response != null && response.status == "ok"){
+                            var address = response.results?.first;
+                            var components = address?.addressComponents;
+                            var pinCode = address?.postcodeLocalities!.first;
+                            var city = components![components.length - 2].longName;
+                            var addressString = "";
+                            for(var i = 0; i < 2; i++){
+                              addressString += components[i].longName!;
+                            }
+
+                            setState(() {
+                              addressController.text = addressString;
+                              cityController.text = city!;
+                              pinCodeController.text = pinCode!;
+                            });
+
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Address Details Fetched based on your current location.")));
+                          }
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to Fetch data. ${response!.status}")));
+                        },
+                        child: Text("Get Address From Current Location"),
+                      ),
                     ),
                   ],
                 ),

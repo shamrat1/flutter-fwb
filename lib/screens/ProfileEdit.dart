@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app103/screens/MapScreen.dart';
 import 'package:flutter_app103/screens/upload_content.dart';
 import 'package:flutter_app103/state/AuthenticatedUserState.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -27,6 +28,15 @@ class _ProfileEditState extends State<ProfileEdit> {
   TextEditingController bioController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   bool _loading = false;
+  double? lat;
+  double? long;
+
+  CameraPosition cameraPosition = CameraPosition(
+    target: LatLng(23.6850,90.3563),
+    zoom: 8
+  );
+  Set<Marker> markers = const <Marker>{};
+
 
   @override
   void initState() {
@@ -110,8 +120,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                   controller: bioController,
                   decoration: InputDecoration(
                     label: Text("Bio"),
-                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))
-
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))
                   ),
                   maxLines: 5,
                   
@@ -128,6 +137,71 @@ class _ProfileEditState extends State<ProfileEdit> {
                   ),
                   
                 ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 8),
+                child: TextButton(
+                  onPressed: (){
+                    showDialog(context: context, builder: (context){
+                      return StatefulBuilder(
+                        builder: (context,setState) {
+                          return Material(
+                            child: Stack(
+                              children: [
+                                Container(
+                                height: MediaQuery.of(context).size.height * 80,
+                                child: GoogleMap(
+                                  initialCameraPosition: cameraPosition,
+                                  markers: markers,
+                                  mapType: MapType.hybrid,
+                                  onTap: (position){
+                                    var marker = Marker(
+                                      markerId: MarkerId(DateTime.now().toString()),
+                                      position: position
+                                      
+                                    );
+                                    setState(() {
+                                      lat = position.latitude;
+                                      long = position.longitude;
+                                      markers = {};
+                                      markers.add(marker);
+                                    });
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Location is set.")));
+                                  },
+                                ),
+                                              ),
+                                              Positioned(
+                                                bottom: 50,
+                                                child: Container(
+                                                  width: MediaQuery.of(context).size.width,
+                                                  alignment: Alignment.center,
+                                                  child: GestureDetector(
+                                                    onTap: () => Navigator.pop(context),
+                                                    child: Container(
+                                                      padding: EdgeInsets.all(15),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(10),
+                                                        color: Colors.white,
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            blurRadius:3,
+                                                            offset: Offset(0,1),
+                                                            color: markers.length > 0 ? Color(0xff7e7e7e) : Colors.white10,
+                                                          )
+                                                        ]
+                                                      ),
+                                                      child: Text("Select Location", style: TextStyle(color:  markers.length > 0 ? Color(0xff000000) : Color(0xff7e7e7e),),)),
+                                                  ),
+                                                ),
+                                              ),
+                              ],
+                            ),
+                          );
+                        }
+                      );
+                    });
+                  },
+                  child: Text("Select Location")),
               ),
               Container(
               height: 200,
@@ -162,13 +236,18 @@ class _ProfileEditState extends State<ProfileEdit> {
                 setState(() {
                   _loading = true;
                 });
+              
                 var userId = context.read(authenticatedUserProvider).documentId;
+                var oldData = context.read(authenticatedUserProvider).user!.data() as dynamic;
                 var data = {
                   "name" : nameController.text,
                   "category" : categoryController.text,
                   "bio" : bioController.text,
                   "location" : locationController.text,
+                  "latitude" : lat ?? oldData["latitude"],
+                  "longitude" : long  ?? oldData["longitude"],
                 };
+                Logger().d(data);
                 if(image != null){
                   var imagePath = await uploadImage(File(image!.path), "users");
             

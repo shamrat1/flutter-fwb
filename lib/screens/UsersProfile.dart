@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app103/screens/MapScreen.dart';
 import 'package:flutter_app103/screens/MessageConversation.dart';
 import 'package:flutter_app103/screens/OrdersPage.dart';
 import 'package:flutter_app103/screens/ProductPage.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_app103/screens/Users_list_page.dart';
 import 'package:flutter_app103/screens/upload_content.dart';
 import 'package:flutter_app103/state/AuthenticatedUserState.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
 
 class UserProfile extends StatefulWidget {
@@ -99,9 +101,9 @@ class _UserProfileState extends State<UserProfile> {
                                 //       'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1562&q=80',
                                 //     ),
                           ),
-                          // Row(
-                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //   children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
                           //     ElevatedButton(
                           //         style: ElevatedButton.styleFrom(
                           //             padding: EdgeInsets.all(5),
@@ -188,17 +190,18 @@ class _UserProfileState extends State<UserProfile> {
                                     style: TextStyle(),
                                   )),
                           //     // SizedBox(width: 10),
-                          //     ElevatedButton(
-                          //         style: ElevatedButton.styleFrom(
-                          //             padding: EdgeInsets.all(5),
-                          //             minimumSize: Size(5, 5)),
-                          //         onPressed: () {},
-                          //         child: Text(
-                          //           "Location",
-                          //           style: TextStyle(),
-                          //         )),
-                          //   ],
-                          // )
+                          if(user["latitude"] != null && user["longitude"] != null)
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      padding: EdgeInsets.all(5),
+                                      minimumSize: Size(5, 5)),
+                                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => MapScreen(initalPosition: LatLng(user["latitude"] ,user["longitude"]),))),
+                                  child: Text(
+                                    "Location",
+                                    style: TextStyle(),
+                                  )),
+                            ],
+                          )
                         ],
                       ),
                       SizedBox(width: 10),
