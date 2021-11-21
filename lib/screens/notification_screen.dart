@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app103/models/NotificationMessage.dart';
 import 'package:flutter_app103/models/common/notification.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class NotificationScreen extends StatefulWidget {
   NotificationScreen({Key? key}) : super(key: key);
@@ -9,29 +11,7 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  final List<Notifications> notificationList = [
-    Notifications(
-      text: 'Use promocode "new2021" to get 20 % off',
-    ),
-    Notifications(
-      text: 'Limited time sale on all bakery items1',
-    ),
-    Notifications(
-      text: 'Limited time sale on all bakery items1',
-    ),
-    Notifications(
-      text: 'Limited time sale on all bakery items1',
-    ),
-    Notifications(
-      text: 'Limited time sale on all bakery items1',
-    ),
-    Notifications(
-      text: 'Limited time sale on all bakery items1',
-    ),
-    Notifications(
-      text: 'Limited time sale on all bakery items1',
-    ),
-  ];
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,19 +24,32 @@ class _NotificationScreenState extends State<NotificationScreen> {
         ),
         centerTitle: true,
       ),
-      body: ListView.builder(
-          itemCount: notificationList.length,
-          itemBuilder: (context, index) {
-            return Container(
-              height: 100,
-              padding: EdgeInsets.all(30),
-              margin: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  color: Colors.white24,
-                  borderRadius: BorderRadius.circular(20)),
-              child: Text(notificationList[index].text!),
-            );
-          }),
+      body: Consumer(
+        builder: (context, watch, child) {
+          var notificationList = watch(messageListProvider);
+          if(notificationList.length == 0) return Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            color: Colors.white,
+            child: Center(
+              child: Text("No Notifications"),
+            ),
+          );
+          return ListView.builder(
+              itemCount: notificationList.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  height: 100,
+                  padding: EdgeInsets.all(30),
+                  margin: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      color: Colors.white24,
+                      borderRadius: BorderRadius.circular(20)),
+                  child: Text(notificationList[index].body),
+                );
+              });
+        }
+      ),
     );
   }
 }

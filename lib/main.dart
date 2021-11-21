@@ -33,17 +33,17 @@ void main() async {
     
 }
 Future<void> messageHandler(RemoteMessage message) async {
-    final providerContainer = ProviderContainer();
-    final storage = new FlutterSecureStorage();
+  final providerContainer = ProviderContainer();
+  final storage = new FlutterSecureStorage();
 
-    providerContainer.read(messageListProvider.notifier).add(NotificationMessage(
-            title: message.notification!.title!,
-            body: message.notification!.body!,
-            id: DateTime.now().toString()));
-        var string = json.encode(providerContainer.read(messageListProvider));
-        // print('Notifications: $string');
-        await storage.write(key: "notifications", value: string);
-  }
+  providerContainer.read(messageListProvider.notifier).add(NotificationMessage(
+          title: message.notification!.title!,
+          body: message.notification!.body!,
+          id: DateTime.now().toString()));
+      var string = json.encode(providerContainer.read(messageListProvider));
+      // print('Notifications: $string');
+      await storage.write(key: "notifications", value: string);
+}
 class MyAppHome extends StatefulWidget {
   @override
   State<MyAppHome> createState() => _MyAppHomeState();

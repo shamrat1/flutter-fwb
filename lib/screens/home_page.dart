@@ -10,6 +10,7 @@ import 'package:flutter_app103/screens/Users_list_page.dart';
 import 'package:flutter_app103/screens/Wishlist.dart';
 import 'package:flutter_app103/screens/checkout_items.dart';
 import 'package:flutter_app103/screens/message_list_screen.dart';
+import 'package:flutter_app103/screens/notification_screen.dart';
 import 'package:flutter_app103/screens/profile_layout.dart';
 import 'package:flutter_app103/screens/search_page.dart';
 import 'package:flutter_app103/screens/track_delivery.dart';
@@ -81,7 +82,8 @@ class _HomePageState extends State<HomePage> {
               leading: Icon(Icons.message),
               title: Text('Messages')),
           ListTile(
-              onTap: () {},
+              onTap: ()  => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (ctx) => NotificationScreen())),
               leading: Icon(Icons.notification_important),
               title: Text('Notifications')),
           ListTile(

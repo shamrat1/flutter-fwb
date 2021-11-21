@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app103/screens/OrdersPage.dart';
+import 'package:flutter_app103/screens/ProductPage.dart';
 import 'package:flutter_app103/screens/ProfileEdit.dart';
 import 'package:flutter_app103/screens/Users_list_page.dart';
 import 'package:flutter_app103/screens/upload_content.dart';
@@ -219,35 +220,38 @@ class _ProfileLayoutState extends State<ProfileLayout> {
                         itemCount: snapshot.data?.docs.length,
                         itemBuilder: (context, index) {
                           var product = snapshot.data!.docs[index].data() as dynamic;
-                          return Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20.0),
-                                border: Border.all(),
-                                image: DecorationImage(
-                                  image: NetworkImage(product["image"] ?? "https://via.placeholder.com/150"),
-                                  fit: BoxFit.fill
-                                )
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Container(
-                                  height: 50,
-                                  width: 200,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0))
+                          return InkWell(
+                            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => ProductPage(product: product,productID: snapshot.data!.docs[index].id,))),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  border: Border.all(),
+                                  image: DecorationImage(
+                                    image: NetworkImage(product["image"] ?? "https://via.placeholder.com/150"),
+                                    fit: BoxFit.fill
+                                  )
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    height: 50,
+                                    width: 200,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0))
+                                    ),
+                                    child: Column(
+                                      
+                                      children: [
+                                        Text(product["name"] ?? "Product Name"),
+                                        Text((product["price"] ?? "" )+ " TK"),
+                                  
+                                      ],
+                                    ),
                                   ),
-                                  child: Column(
-                                    
-                                    children: [
-                                      Text(product["name"] ?? "Product Name"),
-                                      Text((product["price"] ?? "" )+ " TK"),
-                                
-                                    ],
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           );
                         });
