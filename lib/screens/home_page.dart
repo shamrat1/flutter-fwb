@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:floating_bottom_navigation_bar/floating_bottom_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app103/Authentication/signup_page.dart';
 import 'package:flutter_app103/models/common/demo_image_list.dart';
 import 'package:flutter_app103/models/message/message.dart';
 import 'package:flutter_app103/models/order/checkout_item_model.dart';
@@ -19,6 +20,7 @@ import 'package:flutter_app103/state/CartState.dart';
 import 'package:flutter_app103/widgets/ProductTile.dart';
 import 'package:flutter_app103/widgets/home_page_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
 
 class HomePage extends StatefulWidget {
@@ -86,10 +88,17 @@ class _HomePageState extends State<HomePage> {
                   .push(MaterialPageRoute(builder: (ctx) => NotificationScreen())),
               leading: Icon(Icons.notification_important),
               title: Text('Notifications')),
+          // ListTile(
+          //     onTap: () {},
+          //     leading: Icon(Icons.chat_bubble_outline),
+          //     title: Text('Privacy Policy')),
           ListTile(
-              onTap: () {},
-              leading: Icon(Icons.chat_bubble_outline),
-              title: Text('Privacy Policy')),
+              onTap: (){
+                FlutterSecureStorage().deleteAll();
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => SignupPage()), (route) => false);
+              },
+              leading: Icon(Icons.logout),
+              title: Text('Logout')),
         ],
       )),
       appBar: AppBar(

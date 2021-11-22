@@ -39,10 +39,13 @@ class _TransactionPageState extends State<TransactionPage> {
       backgroundColor: Colors.purple[200],
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: Icon(
-          CupertinoIcons.arrow_left,
-          color: Colors.black,
-        ),
+        leading: IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: Icon(
+                  CupertinoIcons.arrow_left,
+                  color: Colors.black,
+                ),
+              ),
         title: Text(
           "Seller Transaction",
           textAlign: TextAlign.center,

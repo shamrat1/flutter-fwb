@@ -50,9 +50,12 @@ class _UserProfileState extends State<UserProfile> {
           return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.white,
-              leading: Icon(
-                CupertinoIcons.arrow_left,
-                color: Colors.black,
+              leading: IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: Icon(
+                  CupertinoIcons.arrow_left,
+                  color: Colors.black,
+                ),
               ),
               title: Text(
                 "Profile of ${user["name"]}",

@@ -40,11 +40,29 @@ class _AddressState extends State<Address> {
 
   void getAddresses() async {
     address = FirebaseFirestore.instance.collection("/address").where("user",isEqualTo: context.read(authenticatedUserProvider).documentId).get();
-    address.then((snapshot){
+    address.then((QuerySnapshot snapshot){
+;
+
       if(!(snapshot.size > 0)){
+
         setState(() {
           showNewAddressPage = true;
         });
+      }else{
+        if( context.read(selectedAddressProvider).documentId == null){
+          snapshot.docs.forEach((singleSnap){
+            var data = singleSnap.data() as Map<String, dynamic>;
+                      Logger().e(data["default_address"]);
+
+            if(data["default_address"] == true){
+              context.read(selectedAddressProvider.notifier).change(AddressModel(
+                documentId: singleSnap.id,
+                data: data
+              ));
+              
+            }
+          });
+        }
       }
     });
   }
@@ -102,6 +120,7 @@ class _AddressState extends State<Address> {
                             itemBuilder: (context, index){
                               
                               var address = snapshot.data!.docs[index].data() as Map<String, dynamic>;
+                              Logger().d("Default address ${address["default_address"]}");
                               return ListTile(
                                 title: Text("${address["address"]}, ${address["landmark"]}"),
                                 subtitle: Text("${address["pincode"]}, ${address["city"]}"),
@@ -288,6 +307,18 @@ class _AddressState extends State<Address> {
                     ElevatedButton(
                       onPressed: () async {
                         if(_loading != true && _validate()){
+                          if(defaultAddress){
+                            var addresses = await FirebaseFirestore.instance.collection("/address")
+                            .where("user",isEqualTo: context.read(authenticatedUserProvider).documentId)
+                            .where("default_address",isEqualTo: true)
+                            .get();
+
+                            addresses.docs.forEach((element) {
+                              FirebaseFirestore.instance.collection("/address").doc(element.id).update({
+                                "default_address" : false,
+                              });
+                            });
+                          }
                           var data = {
                             "address" : addressController.text,
                             "landmark" : landMarkController.text,
@@ -297,7 +328,11 @@ class _AddressState extends State<Address> {
                             "default_address" : defaultAddress,
                             "user" : context.read(authenticatedUserProvider).documentId,
                           };
-                          await FirebaseFirestore.instance.collection("/address").add(data);
+                          var newAddress = await FirebaseFirestore.instance.collection("/address").add(data);
+                          FirebaseFirestore.instance.collection("/address").doc(newAddress.id).get().then((value){
+                            context.read(selectedAddressProvider.notifier).change(AddressModel(documentId: newAddress.id, data: value.data() as dynamic));
+                          });
+                          getAddresses();
                           setState(() {
                             showNewAddressPage = false;
                             addressController.text = "";
@@ -305,7 +340,6 @@ class _AddressState extends State<Address> {
                             pinCodeController.text = "";
                             cityController.text = "";
                           });
-                          getAddresses();
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Address added successfully.")));
                         }
                         

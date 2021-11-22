@@ -18,10 +18,13 @@ class _EditProfileState extends State<EditProfile> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: Icon(
-          CupertinoIcons.arrow_left,
-          color: Colors.black,
-        ),
+        leading: IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: Icon(
+                  CupertinoIcons.arrow_left,
+                  color: Colors.black,
+                ),
+              ),
         title: Text(
           "FEMALEPRENEURE BAZAAR",
           style: TextStyle(color: Colors.black38),

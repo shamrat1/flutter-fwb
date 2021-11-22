@@ -31,18 +31,24 @@ Completer<GoogleMapController> _controller = Completer();
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      body: _kGooglePlex != null ? GoogleMap(
-        mapType: MapType.hybrid,
-        markers: {
-          Marker(
-            markerId: MarkerId("user_marker"),
-            position: widget.initalPosition!,
-          ),
-        },
-        initialCameraPosition: _kGooglePlex!,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
+      appBar: AppBar(
+        title: Text("Map View", style: TextStyle(color: Colors.black),),
+        backgroundColor: Colors.white10,
+      ),
+      body: _kGooglePlex != null ? Container(
+        child: GoogleMap(
+          mapType: MapType.hybrid,
+          markers: {
+            Marker(
+              markerId: MarkerId("user_marker"),
+              position: widget.initalPosition!,
+            ),
+          },
+          initialCameraPosition: _kGooglePlex!,
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+          },
+        ),
       ) : Center(child: CircularProgressIndicator(),),
     );
   }

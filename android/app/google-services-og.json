@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "444029110459",
+    "project_id": "femalepreneur-bazaar",
+    "storage_bucket": "femalepreneur-bazaar.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:444029110459:android:42a5f52f5489a9405dc19e",
+        "android_client_info": {
+          "package_name": "com.femalepreneuer.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "444029110459-otuods6bs6c2fb85679n6ugp0u5jca9t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.femalepreneuer.app",
+            "certificate_hash": "15af69eab2b1a23d4bc49f0d928cc96582262421"
+          }
+        },
+        {
+          "client_id": "444029110459-cdfq6phhtjsigd45a8pf0e385rk80dln.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeWfhcdUEEv6ItiRs3PrHn-JtMDFH_SiY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "444029110459-cdfq6phhtjsigd45a8pf0e385rk80dln.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
