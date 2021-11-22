@@ -23,109 +23,111 @@ class ProductTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(product: singleProduct, productID: productID,)));
-        
+    return Consumer(
+      builder: (context, watch, child) {
+        var favorites = watch(favoriteProductsProvider);
+        favorites.forEach((element) {
+          if (element.documentID == productID) {
+            isWishlisted = true;
+            wishlistObj = element;
+          }
+        });
+        return InkWell(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => ProductPage(product: singleProduct, productID: productID,)));
+            
 
-        // Logger().w(singleProduct);
-      },
-      child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-              border: Border.all(),
-              image: DecorationImage(
-                  image: NetworkImage(singleProduct["image"] ??
-                      "https://via.placeholder.com/150"),
-                  fit: BoxFit.fill)),
-          child: LayoutBuilder(builder: (context, constraints) {
-            return Stack(
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
+            // Logger().w(singleProduct);
+          },
+          child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20.0),
+                  border: Border.all(),
+                  image: DecorationImage(
+                      image: NetworkImage(singleProduct["image"] ??
+                          "https://via.placeholder.com/150"),
+                      fit: BoxFit.fill)),
+              child: LayoutBuilder(builder: (context, constraints) {
+                return Stack(
                   children: [
-                    Container(
-                      // height: 50,
-                      width: constraints.maxWidth,
-                      // alignment: Alignment.bottomCenter,
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(20.0),
-                              bottomRight: Radius.circular(20.0))),
-                      child: Column(
-                        children: [
-                          Text(
-                            singleProduct["name"] ?? "Product Name",
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                          ),
-                          Text((singleProduct["price"] ?? "") + " TK"),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                if (singleProduct["rating"] != null && singleProduct["ratingCount"] != null && (singleProduct["rating"] / (singleProduct["ratingCount"] ?? 1)) > 0)
-                  Positioned(
-                    left: 5,
-                    top: 3,
-                    child: Row(
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Icon(
-                          Icons.star,
-                          color: Colors.amber,
+                        Container(
+                          // height: 50,
+                          width: constraints.maxWidth,
+                          // alignment: Alignment.bottomCenter,
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(20.0),
+                                  bottomRight: Radius.circular(20.0))),
+                          child: Column(
+                            children: [
+                              Text(
+                                singleProduct["name"] ?? "Product Name",
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                              ),
+                              Text((singleProduct["price"] ?? "") + " TK"),
+                            ],
+                          ),
                         ),
-                        Text((singleProduct["rating"] /
-                                (singleProduct["ratingCount"] ?? 1))
-                            .toString()),
                       ],
                     ),
-                  ),
-                Positioned(
-                  right: 5,
-                  top: 3,
-                  child: Consumer(builder: (context, watch, child) {
-                    var favorites = watch(favoriteProductsProvider);
-                    favorites.forEach((element) {
-                      if (element.documentID == productID) {
-                        isWishlisted = true;
-                        wishlistObj = element;
-                      }
-                    });
-                    return IconButton(
-                      icon: Icon(
-                        isWishlisted ? Icons.favorite : Icons.favorite_outline,
-                        color: Colors.redAccent.shade200,
+                    if (singleProduct["rating"] != null && singleProduct["ratingCount"] != null && (singleProduct["rating"] / (singleProduct["ratingCount"] ?? 1)) > 0)
+                      Positioned(
+                        left: 5,
+                        top: 3,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            Text((singleProduct["rating"] /
+                                    (singleProduct["ratingCount"] ?? 1))
+                                .toString()),
+                          ],
+                        ),
                       ),
-                      onPressed: () {
-                        try {
-                          if (isWishlisted) {
-                            context
-                                .read(favoriteProductsProvider.notifier)
-                                .delete(wishlistObj!.wishlistId);
-                          } else {
-                            context
-                                .read(favoriteProductsProvider.notifier)
-                                .addFavorite(
-                                    productID,
-                                    singleProduct,
-                                    context
-                                        .read(authenticatedUserProvider)
-                                        .documentId!);
-                          }
-                        } finally {
-                          // ScaffoldMessenger.of(context).showSnackBar(snackBar)
-                        }
-                      },
-                    );
-                  }),
-                ),
-              ],
-            );
-          })),
+                    Positioned(
+                      right: 5,
+                      top: 3,
+                      child: IconButton(
+                          icon: Icon(
+                            isWishlisted ? Icons.favorite : Icons.favorite_outline,
+                            color: Colors.redAccent.shade200,
+                          ),
+                          onPressed: () {
+                            try {
+                              if (isWishlisted) {
+                                context
+                                    .read(favoriteProductsProvider.notifier)
+                                    .delete(wishlistObj!.wishlistId);
+                              } else {
+                                context
+                                    .read(favoriteProductsProvider.notifier)
+                                    .addFavorite(
+                                        productID,
+                                        singleProduct,
+                                        context
+                                            .read(authenticatedUserProvider)
+                                            .documentId!);
+                              }
+                            } finally {
+                              // ScaffoldMessenger.of(context).showSnackBar(snackBar)
+                            }
+                          
+                      }),
+                    ),
+                  ],
+                );
+              })),
+        );
+      }
     );
   }
 }

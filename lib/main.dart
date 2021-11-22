@@ -89,6 +89,7 @@ class _MyAppHomeState extends State<MyAppHome> {
   }
 
     void _initFirebaseMessingConfigs() async {
+      
     NotificationSettings settings = await _firebaseMessaging.requestPermission(
       alert: true,
       announcement: false,

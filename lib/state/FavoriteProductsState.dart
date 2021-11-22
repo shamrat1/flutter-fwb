@@ -39,7 +39,7 @@ class FavoriteProductsState extends StateNotifier<List<FavoriteProduct>>{
   void change(List<FavoriteProduct> products) => state = products;
 
   void addFavorite(String id, Map<String,dynamic> data, String userId) async {
-    var list = state;
+    var list = [...state];
     var item = await FirebaseFirestore.instance.collection("wishlists").add({
       	"user_id" : userId,
         "product_id" : id,
@@ -50,8 +50,13 @@ class FavoriteProductsState extends StateNotifier<List<FavoriteProduct>>{
   }
 
   void delete(String wishlistID) async {
+    var list = [...state];
     await FirebaseFirestore.instance.collection("wishlists").doc(wishlistID).delete();
-    fetch();
+    var index = list.indexWhere((element) => element.wishlistId == wishlistID);
+    list.removeAt(index);
+    // Logger().d("${wishlistID} | $index | ${state.length} | ${list.length}");
+    change(list);
+    // fetch();
   }
 }
 

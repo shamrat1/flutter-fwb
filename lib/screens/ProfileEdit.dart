@@ -67,10 +67,10 @@ class _ProfileEditState extends State<ProfileEdit> {
           style: TextStyle(color: Colors.black38),
         ),
         actions: [
-          IconButton(
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => MapScreen())),
-            icon: Icon(Icons.location_on_rounded, color: Colors.black,),
-          ),
+          // IconButton(
+          //   onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => MapScreen())),
+          //   icon: Icon(Icons.location_on_rounded, color: Colors.black,),
+          // ),
         ],
       ),
       body: Container(
