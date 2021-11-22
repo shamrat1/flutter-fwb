@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app103/screens/ProductPage.dart';
 import 'package:flutter_app103/state/FavoriteProductsState.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -42,6 +43,9 @@ class Wishlist extends ConsumerWidget {
                     context.read(favoriteProductsProvider.notifier).delete(items[index].wishlistId);
                   },
                 ),
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder:(context) => ProductPage(product: items[index].data,productID: items[index].documentID,),));
+                },
               ),
             );
           },
