@@ -352,17 +352,16 @@ class _AddressState extends State<Address> {
                       padding: EdgeInsets.all(8),
                       child: TextButton(
                         onPressed: () async {
-                          setState(() {
-                            _loading = true;
-                          });
+                          // setState(() {
+                          //   _loading = true;
+                          // });
                           var position = await Geolocator.getCurrentPosition();
                           var geoCoding = GoogleGeocoding(googleApiKey);
                           GeocodingResponse? response = await geoCoding.geocoding.getReverse(LatLon(position.latitude, position.longitude));
-
-                          if(response != null && response.status == "ok"){
+                          if(response != null && response.status == "OK"){
                             var address = response.results?.first;
                             var components = address?.addressComponents;
-                            var pinCode = address?.postcodeLocalities!.first;
+                            var pinCode = address?.postcodeLocalities?.first ?? "";
                             var city = components![components.length - 2].longName;
                             var addressString = "";
                             for(var i = 0; i < 2; i++){
@@ -372,7 +371,7 @@ class _AddressState extends State<Address> {
                             setState(() {
                               addressController.text = addressString;
                               cityController.text = city!;
-                              pinCodeController.text = pinCode!;
+                              pinCodeController.text = pinCode;
                             });
 
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Address Details Fetched based on your current location.")));
